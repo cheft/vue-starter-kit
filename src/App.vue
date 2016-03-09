@@ -1,7 +1,15 @@
 <template>
   <div id="app">
-    <hello></hello>
     <img class="logo" src="./assets/logo.png">
+
+    <hello></hello>
+
+    <div class="navigator">
+      <a v-link="{ path: '/' }">home</a>
+      <a v-link="{ path: '/about' }">about</a>
+    </div>
+    <router-view></router-view>
+
     <p>
       Welcome to your Vue.js app. To get started, take a look at the
       <a href="https://github.com/vuejs-templates/webpack#folder-structure" target="_blank">README</a>
@@ -17,6 +25,7 @@
       <a href="https://github.com/vuejs/vue-router/" target="_blank">vue-router</a> for routing and
       <a href="https://github.com/vuejs/vuex/" target="_blank">vuex</a> for state management.
     </p>
+
   </div>
 </template>
 
@@ -41,6 +50,8 @@ body {
   align-items: center;
   justify-content: center;
   height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 #app {
