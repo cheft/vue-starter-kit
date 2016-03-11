@@ -11,7 +11,7 @@ import Setting from './components/Setting'
 Vue.use(VueRouter)
 Vue.use(VueResource)
 
-var router = new VueRouter()
+var router = window.router = new VueRouter()
 
 router.map({
   '/': { component: Home },
@@ -21,3 +21,15 @@ router.map({
 })
 
 router.start(App, 'app')
+
+router.beforeEach(function (transition) {
+  router.app.$refs.nav.$set('path', transition.to.path)
+  transition.next()
+})
+
+if ('addEventListener' in document) {
+  document.addEventListener('DOMContentLoaded', function () {
+    /* eslint-disable no-undef */
+    FastClick.attach(document.body)
+  }, false)
+}

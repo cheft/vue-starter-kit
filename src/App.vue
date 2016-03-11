@@ -1,6 +1,6 @@
 <template>
-  <navigator></navigator>
-  <router-view></router-view>
+  <navigator v-ref:nav></navigator>
+  <router-view transition="fade" transition-mode="out-in"></router-view>
 </template>
 
 <script>
@@ -12,3 +12,13 @@
     }
   }
 </script>
+
+<style>
+.fade-transition {
+  transition: opacity .3s ease;
+}
+
+.fade-enter, .fade-leave {
+  opacity: 0;
+}
+</style>
