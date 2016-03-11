@@ -1,18 +1,23 @@
-var Vue = require('vue')
-var VueRouter = require('vue-router')
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+import VueResource from 'vue-resource'
+import App from './App'
 
-var App = require('./App')
-var Home = require('./components/Home')
-var About = require('./components/About')
+import Home from './components/Home'
+import Info from './components/Info'
+import Gallery from './components/Gallery'
+import Setting from './components/Setting'
 
 Vue.use(VueRouter)
-Vue.use(require('vue-resource'))
+Vue.use(VueResource)
 
 var router = new VueRouter()
 
 router.map({
   '/': { component: Home },
-  '/about': { component: About }
+  '/info': { component: Info },
+  '/gallery': { component: Gallery },
+  '/setting': { component: Setting }
 })
 
 router.start(App, 'app')
