@@ -2,7 +2,8 @@ var path = require('path')
 
 module.exports = {
   entry: {
-    app: './src/main.js'
+    app: './src/main.js',
+    split_code: './node_modules/vux/vux'
   },
   output: {
     path: path.resolve(__dirname, '../dist/static'),

@@ -1,70 +1,49 @@
 <template>
   <div class="vux-demo">
-    <br/>
-    <flexbox class="ui-border-tb" :margin-left=0>
-      <flexbox-item class="ui-border-r test"><div>北京</div></flexbox-item>
-      <flexbox-item class="ui-border-r test"><div>上海</div></flexbox-item>
-      <flexbox-item class="ui-border-r test"><div>广州</div></flexbox-item>
-      <flexbox-item class="ui-border-r test"><div>深圳</div></flexbox-item>
-      <flexbox-item class="test"><div>其他</div></flexbox-item>
-    </flexbox>
-    <flexbox class="ui-border-b" :margin-left=0>
-      <flexbox-item class="ui-border-r test"><div>天津</div></flexbox-item>
-      <flexbox-item class="ui-border-r test"><div>西安</div></flexbox-item>
-      <flexbox-item class="ui-border-r test"><div>重庆</div></flexbox-item>
-      <flexbox-item class="ui-border-r test"><div>杭州</div></flexbox-item>
-      <flexbox-item class="test"><div>其他</div></flexbox-item>
-    </flexbox>
-    <flexbox class="ui-border-b" :margin-left=0>
-      <flexbox-item class="ui-border-r test"><div>南京</div></flexbox-item>
-      <flexbox-item class="ui-border-r test"><div>武汉</div></flexbox-item>
-      <flexbox-item class="ui-border-r test"><div>成都</div></flexbox-item>
-      <flexbox-item class="ui-border-r test"><div>长沙</div></flexbox-item>
-      <flexbox-item class="test"><div>其他</div></flexbox-item>
-    </flexbox>
-    <br/>
-    <br/>
+    <blur :blur-amount=30 :url="url">
+      <p class="center"><img :src="url"></p>
+    </blur>
     <flexbox class="ui-border-tb" :margin-left=0>
       <flexbox-item class="ui-border-r">
-        <a class="item item1" href="/gz/326/0-0/0-0-0-0-0" mon="position=1&content=美食">
+        <a class="item item1" v-link="{path: '/notice'}">
           <div class="img meishi"></div>
           <div class="text">
-          美食</div>
+          通知</div>
         </a>
       </flexbox-item>
-      <flexbox-item class="ui-border-r"><a class="item item2" href="/gz/326/0-0/0-0-0-0-0" mon="position=1&content=美食">
+      <flexbox-item class="ui-border-r"><a class="item item2" v-link="{path: '/test'}">
           <div class="img dianying"></div>
           <div class="text">
           电影</div>
         </a></flexbox-item>
-      <flexbox-item class="ui-border-r"><a class="item item3" href="/gz/326/0-0/0-0-0-0-0" mon="position=1&content=美食">
+      <flexbox-item class="ui-border-r"><a class="item item3" href="javascript:;">
           <div class="img jiudian"></div>
           <div class="text">
           酒店</div>
         </a></flexbox-item>
-      <flexbox-item><a class="item item4" href="/gz/326/0-0/0-0-0-0-0" mon="position=1&content=美食">
+      <flexbox-item><a class="item item4" href="javascript:;">
           <div class="img yule"></div>
           <div class="text">
           休闲娱乐</div>
         </a></flexbox-item>
     </flexbox>
     <flexbox class="ui-border-b" :margin-left=0>
-      <flexbox-item class="ui-border-r"><a class="item item5" href="/gz/326/0-0/0-0-0-0-0" mon="position=1&content=美食">
+      <flexbox-item class="ui-border-r"><a class="item item5" href="javascript:;">
           <div class="img huoguo"></div>
           <div class="text">
           火锅</div>
         </a></flexbox-item>
-       <flexbox-item class="ui-border-r"><a class="item item6" href="/gz/326/0-0/0-0-0-0-0" mon="position=1&content=美食">
+       <flexbox-item class="ui-border-r"><a class="item item6" href="javascript:;">
           <div class="img lvyou"></div>
           <div class="text">
           旅游</div>
         </a></flexbox-item>
-      <flexbox-item class="ui-border-r"><a class="item item7" href="/gz/326/0-0/0-0-0-0-0" mon="position=1&content=美食">
+      <flexbox-item class="ui-border-r"><a class="item item7" href="javascript:;">
           <div class="img daijinquan"></div>
           <div class="text">
           代金券</div>
         </a></flexbox-item>
-      <flexbox-item><a class="item item8" href="/gz/326/0-0/0-0-0-0-0" mon="position=1&content=美食">
+      <flexbox-item><a class="item item8" href="javascript:;">
           <div class="img ktv"></div>
           <div class="text">
           KTV</div>
@@ -74,17 +53,35 @@
 </template>
 
 <script>
-import { Flexbox, FlexboxItem } from 'vux'
+import { Blur, Flexbox, FlexboxItem } from 'vux'
 export default {
   components: {
+    Blur,
     Flexbox,
     FlexboxItem
+  },
+
+  data () {
+    return {
+      url: 'static/img/cheft.png'
+    }
   }
 }
 </script>
 
 <style scoped>
-/*@import 'vux/src/components/1px.css';*/
+.center {
+  text-align: center;
+  padding-top: 40px;
+  color: #fff;
+  font-size: 18px;
+}
+.center img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 4px solid #ececec;
+}
 
 .vux-demo .test{
   height:50px;

@@ -24,10 +24,6 @@ cssLoaders({
   config.vue.loaders[loader.key] = loader.value
 })
 
-Object.keys(config.entry).forEach(function (name, i) {
-  config.entry[name] = [config.entry[name]]
-})
-
 config.plugins = (config.plugins || []).concat([
   // http://vuejs.github.io/vue-loader/workflow/production.html
   new webpack.DefinePlugin({
@@ -50,7 +46,6 @@ config.plugins = (config.plugins || []).concat([
     filename: '../index.html',
     template: 'index.html',
     inject: true,
-    excludeChunks: ['split_code'],
     minify: {
       removeComments: true,
       collapseWhitespace: true,
@@ -58,8 +53,7 @@ config.plugins = (config.plugins || []).concat([
       // more options:
       // https://github.com/kangax/html-minifier#options-quick-reference
     }
-  }),
-  new webpack.optimize.CommonsChunkPlugin(/* chunkName= */'common', /* filename= */'common.[hash].js')
+  })
 ])
 
 module.exports = config

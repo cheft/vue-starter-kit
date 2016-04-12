@@ -36,8 +36,10 @@ config.plugins = (config.plugins || []).concat([
   new HtmlWebpackPlugin({
     filename: 'index.html',
     template: 'index.html',
-    inject: true
-  })
+    inject: true,
+    excludeChunks: ['split_code']
+  }),
+  new webpack.optimize.CommonsChunkPlugin(/* chunkName= */'common', /* filename= */'common.js')
 ])
 
 module.exports = config
