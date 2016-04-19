@@ -3,6 +3,7 @@
 </template>
 
 <script>
+  import './transitions/PtPage'
   import Navigator from './components/Navigator'
 
   export default {
@@ -13,8 +14,11 @@
 </script>
 
 <style>
+@import '~vux/vux.css';
+/*@import './transitions/pt-page.css';*/
+
 .fade-transition {
-  transition: opacity .3s ease;
+  transition: opacity .2s ease;
 }
 
 .fade-enter, .fade-leave {

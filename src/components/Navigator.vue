@@ -30,6 +30,3 @@
 
   export default vm
 </script>
-<style>
-@import '~vux/vux.css';
-</style>

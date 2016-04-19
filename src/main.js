@@ -31,9 +31,25 @@ router.map({
       require(['./components/Setting'], resolve)
     }
   },
+
   '/notice': {
     component: function (resolve) {
       require(['./components/Notice'], resolve)
+    }
+  },
+  '/flow': {
+    component: function (resolve) {
+      require(['./components/Flow'], resolve)
+    }
+  },
+  '/meeting': {
+    component: function (resolve) {
+      require(['./components/Meeting'], resolve)
+    }
+  },
+  '/address': {
+    component: function (resolve) {
+      require(['./components/Address'], resolve)
     }
   }
 })

@@ -3,7 +3,7 @@
     <tab :line-width=1>
       <tab-item :selected="current === item" v-for="item in items" @click="current = item">{{item}}</tab-item>
     </tab>
-    这是通知页
+    这是会议页
   </div>
 </template>
 

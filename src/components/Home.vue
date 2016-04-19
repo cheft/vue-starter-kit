@@ -1,5 +1,5 @@
 <template>
-  <div class="vux-demo">
+  <div class="vux-demo" style="min-height: 736px;">
     <blur :blur-amount=30 :url="url">
       <p class="center"><img :src="url"></p>
     </blur>
@@ -11,42 +11,42 @@
           通知</div>
         </a>
       </flexbox-item>
-      <flexbox-item class="ui-border-r"><a class="item item2" v-link="{path: '/test'}">
+      <flexbox-item class="ui-border-r"><a class="item item2" v-link="{path: '/flow'}">
           <div class="img dianying"></div>
           <div class="text">
-          电影</div>
+          流程</div>
         </a></flexbox-item>
-      <flexbox-item class="ui-border-r"><a class="item item3" href="javascript:;">
+      <flexbox-item class="ui-border-r"><a class="item item3" v-link="{path: '/meeting'}">
           <div class="img jiudian"></div>
           <div class="text">
-          酒店</div>
+          会议</div>
         </a></flexbox-item>
-      <flexbox-item><a class="item item4" href="javascript:;">
+      <flexbox-item><a class="item item4" v-link="{path: '/address'}">
           <div class="img yule"></div>
           <div class="text">
-          休闲娱乐</div>
+          通讯录</div>
         </a></flexbox-item>
     </flexbox>
     <flexbox class="ui-border-b" :margin-left=0>
-      <flexbox-item class="ui-border-r"><a class="item item5" href="javascript:;">
+      <flexbox-item class="ui-border-r"><a class="item item5" v-link="{path: '/setting'}">
           <div class="img huoguo"></div>
           <div class="text">
-          火锅</div>
+          设置</div>
         </a></flexbox-item>
-       <flexbox-item class="ui-border-r"><a class="item item6" href="javascript:;">
+       <flexbox-item class="ui-border-r"><a class="item item6" v-link="{path: '/setting'}">
           <div class="img lvyou"></div>
           <div class="text">
-          旅游</div>
+          设置</div>
         </a></flexbox-item>
-      <flexbox-item class="ui-border-r"><a class="item item7" href="javascript:;">
+      <flexbox-item class="ui-border-r"><a class="item item7" v-link="{path: '/setting'}">
           <div class="img daijinquan"></div>
           <div class="text">
-          代金券</div>
+          设置</div>
         </a></flexbox-item>
-      <flexbox-item><a class="item item8" href="javascript:;">
+      <flexbox-item><a class="item item8" v-link="{path: '/setting'}">
           <div class="img ktv"></div>
           <div class="text">
-          KTV</div>
+          设置</div>
         </a></flexbox-item>
     </flexbox>
   </div>
