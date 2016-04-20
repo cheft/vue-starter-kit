@@ -15,6 +15,7 @@
 
 <style>
 @import '~vux/vux.css';
+@import 'http://at.alicdn.com/t/font_1461133974_6004195.css';
 /*@import './transitions/pt-page.css';*/
 
 .fade-transition {
