@@ -7,7 +7,8 @@
 </template>
 
 <script>
-  import { Tab, TabItem } from 'vux'
+  import Tab from 'vux/components/tab'
+  import TabItem from 'vux/components/tab-item'
 
   var vm = {
     components: {

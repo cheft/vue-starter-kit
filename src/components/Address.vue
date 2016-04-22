@@ -1,22 +1,23 @@
 <template>
   <div>
-    <blur :blur-amount=30 :url="url">
-      <div class="iconfont icon-search"></div>
-      <div class="iconfont icon-share"></div>
+    <blur :blur-amount=30 :url="url" class="bg_div">
+      <!-- <div class="iconfont icon-search"></div> -->
+      <!-- <div class="iconfont icon-share"></div> -->
       <p class="center"><img :src="url">
         <br>
         <span>陈海峰</span>
       </p>
     </blur>
     <group>
-    <cell title="部门" value="技术中心"></cell>
-    <cell title="手机" value="13316463333"></cell>
-    <cell title="座机" value="0755-87878787"></cell>
-    <cell title="微信" value="HiFsion"></cell>
-    <cell title="邮箱" value="m@cheft.cn"></cell>
+      <cell title="部门" value="技术中心"></cell>
+      <cell title="手机" value="13316463333"></cell>
+      <cell title="座机" value="0755-87878787"></cell>
+      <cell title="微信" value="HiFsion"></cell>
+      <cell title="邮箱" value="m@cheft.cn"></cell>
     </group>
     <div class="weui_tabbar">
-      <search @result-click="resultClick" @on-change="getResult" :results="results" :value.sync="value"></search>
+      <search @result-click="resultClick" @on-change="getResult" :results="results" :value.sync="value"
+        placeholder="输入名字/手机/工号查看同事名片" cancel-text="关闭"></search>
       <!-- <a href="call:13316463314" class="weui_tabbar_item">
         <div class="iconfont icon-call"><label>打电话</label></div>
       </a>
@@ -29,7 +30,10 @@
 </template>
 
 <script>
-import { Search, Blur, Group, Cell } from 'vux'
+import Search from 'vux/components/search'
+import Blur from 'vux/components/blur'
+import Group from 'vux/components/group'
+import Cell from 'vux/components/cell'
 
 export default {
   components: {
@@ -72,7 +76,7 @@ function getResult (val) {
   text-align: center;
   padding-top: 30px;
   color: #fff;
-  font-size: 18px;
+  font-size: 17px;
 }
 .center img {
   width: 100px;
@@ -105,5 +109,28 @@ function getResult (val) {
   right: 15px;
   color: #fff;
   font-size: 20px;
+}
+
+@media (max-height: 480px) {
+  .center {
+    padding-top: 20px;
+  }
+
+  .center img {
+    width: 80px;
+    height: 80px;
+  }
+
+  .bg_div {
+    height: 150px !important;
+  }
+
+  .no_group_title {
+    margin-top: 0;
+  }
+
+  .weui_cells {
+    font-size: 15px;
+  }
 }
 </style>

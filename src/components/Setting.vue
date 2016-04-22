@@ -28,7 +28,12 @@
 </template>
 
 <script>
-import { Tip, DevTip, Number, Selector, Group, Btn, Switch, GroupTitle, Radio, Checklist, Textarea, Cell, Input as Xinput } from 'vux'
+import Tip from 'vux/components/tip'
+import DevTip from 'vux/components/dev-tip'
+import Group from 'vux/components/group'
+import Switch from 'vux/components/switch'
+import GroupTitle from 'vux/components/group-title'
+import Cell from 'vux/components/cell'
 
 export default {
   ready: function () {
@@ -42,19 +47,12 @@ export default {
     })
   },
   components: {
-    Number,
-    Selector,
     Group,
-    Btn,
     Tip,
     Switch,
     GroupTitle,
-    Radio,
     DevTip,
-    Checklist,
-    Textarea,
-    Cell,
-    Xinput
+    Cell
   },
   data: function () {
     return {

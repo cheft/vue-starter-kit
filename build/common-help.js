@@ -1,0 +1,5 @@
+import 'vue'
+import 'vue-resource'
+// import 'vue-router'
+// import 'zepto-browserify'
+// import 'fastclick'

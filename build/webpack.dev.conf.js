@@ -37,7 +37,7 @@ config.plugins = (config.plugins || []).concat([
     filename: 'index.html',
     template: 'index.html',
     inject: true,
-    excludeChunks: ['split_code']
+    excludeChunks: ['deleteme']
   }),
   new webpack.optimize.CommonsChunkPlugin(/* chunkName= */'common', /* filename= */'common.js')
 ])

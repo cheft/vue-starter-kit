@@ -3,7 +3,7 @@ var path = require('path')
 module.exports = {
   entry: {
     app: './src/main.js',
-    split_code: './node_modules/vux/vux'
+    deleteme: './build/common-help' // 必须依赖，以便共同打包到common
   },
   output: {
     path: path.resolve(__dirname, '../dist/static'),

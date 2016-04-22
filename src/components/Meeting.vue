@@ -58,7 +58,13 @@
 </template>
 
 <script>
-  import { ColorPicker, Scroller, Swiper, SwiperItem, Range, Flexbox, FlexboxItem } from 'vux'
+  import ColorPicker from 'vux/components/color-picker'
+  import Scroller from 'vux/components/scroller'
+  import Swiper from 'vux/components/swiper'
+  import SwiperItem from 'vux/components/swiper-item'
+  import Range from 'vux/components/range'
+  import Flexbox from 'vux/components/flexbox'
+  import FlexboxItem from 'vux/components/flexbox-item'
 
   export default {
     components: {

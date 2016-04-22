@@ -53,7 +53,10 @@
 </template>
 
 <script>
-import { Blur, Flexbox, FlexboxItem } from 'vux'
+import Blur from 'vux/components/blur'
+import Flexbox from 'vux/components/flexbox'
+import FlexboxItem from 'vux/components/flexbox-item'
+
 export default {
   components: {
     Blur,
