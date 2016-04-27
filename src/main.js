@@ -21,10 +21,24 @@ router.map({
       require(['./components/Setting'], resolve)
     }
   },
-
+  '/announcement': {
+    component: function (resolve) {
+      require(['./components/Announcement'], resolve)
+    }
+  },
+  '/announcement-details': {
+    component: function (resolve) {
+      require(['./components/AnnouncementDetails'], resolve)
+    }
+  },
   '/notice': {
     component: function (resolve) {
       require(['./components/Notice'], resolve)
+    }
+  },
+  '/notice-details': {
+    component: function (resolve) {
+      require(['./components/NoticeDetails'], resolve)
     }
   },
   '/flow': {

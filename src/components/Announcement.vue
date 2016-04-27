@@ -1,8 +1,8 @@
 <template>
-  <div class="notice-body">
+  <div class="announcement-body">
     <search @result-click="resultClick" @on-change="getResult" :results="results" :value.sync="value" class="search-body"></search>
     <scroller lock-x scrollbar-y use-pulldown use-pullup :pulldown-status.sync="pulldownStatus" :pullup-status.sync="pullupStatus" @pulldown:loading="loadDown" @pullup:loading="loadUp" class="scroll-body">
-      <group v-for="item in items" class="group-body" v-link="{path: '/notice-details'}">
+      <group v-for="item in items" class="group-body" v-link="{path: '/announcement-details'}">
         <flexbox :gutter="0" class="flex-box">
           <flexbox-item>
             <flexbox :gutter="0" orient="vertical">
@@ -13,9 +13,15 @@
                 <flexbox :gutter="0">
                   <flexbox-item>
                     <span class="info">{{ item[1] }}</span>
-                  </flexbox-item>
-                  <flexbox-item :span="4">
                     <time class="info">{{ item[2] }}</time>
+                  </flexbox-item>
+                  <flexbox-item :span="3">
+                    <label class="info">阅读:</label>
+                    <span class="info">{{ item[3] }}</span>
+                  </flexbox-item>
+                  <flexbox-item :span="3">
+                    <label class="info">评论:</label>
+                    <span class="info">{{ item[4] }}</span>
                   </flexbox-item>
                 </flexbox>
               </flexbox-item>
@@ -79,7 +85,7 @@
     },
     data () {
       return {
-        items: [['Q房网集团2016年清明节放假 通知', 'Q房网【2016】007号', '2016-04-01'], ['整个天空都是黑色的，心情是否有影响呢，何时才能见到彩虹？', '李四', '2016-04-24']],
+        items: [['今天是愚人节，你们今天有被骗到吗？', '张三了际', '2016-04-01', '254', '8888'], ['整个天空都是黑色的，心情是否有影响呢，何时才能见到彩虹？', '李四', '2016-04-24', '115', '85']],
         results: [],
         value: '',
         pullupStatus: 'default',
@@ -100,7 +106,7 @@
 </script>
 
 <style scoped>
-.notice-body {
+.announcement-body {
   background-color: #f8f8f8;  
 }
 
@@ -118,7 +124,7 @@
   box-sizing: border-box;
 }
 
-.weui_cells {
+.group-body .weui_cells {
   margin-top: 15px;
 }
 
@@ -146,10 +152,15 @@
   }
 }
 
+time.info {
+  margin-left: .5em;
+}
+
 .arrow {
   content: " ";
-  display: inline-block;
+  display: block;
   -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
   transform: rotate(45deg);
   height: 10px;
   width: 10px;
