@@ -1,6 +1,6 @@
 <template>
   <div class="page-body">
-    <search @result-click="resultClick" @on-change="getResult" :results="results" :value.sync="value" class="search-body"></search>
+    <search @result-click="resultClick" @on-change="getResult" :results="results" :value.sync="value" class="search-body" placeholder="输入关键词" cancel-text="取消"></search>
     <div v-if="isLoading" class="loading-body">
       <p class="loading"><spinner type="ios-small"></spinner><span>{{ tipInfo }}</span></p>
     </div>
@@ -10,7 +10,7 @@
       </div>
       <div v-else class="list-body">
         <scroller lock-x scrollbar-y use-pulldown use-pullup :pulldown-status.sync="pulldownStatus" :pullup-status.sync="pullupStatus" @pulldown:loading="loadDown" @pullup:loading="loadUp" class="scroll-body">
-          <group v-for="item in items" class="group-body" v-link="'dispatch-details/' + item.id">
+          <div v-for="item in items" class="group-body" v-link="'dispatch-details/' + item.id">
             <flexbox :gutter="0" class="flex-box">
               <flexbox-item>
                 <flexbox :gutter="0" orient="vertical">
@@ -33,7 +33,7 @@
                 <i class="arrow"></i>
               </flexbox-item>
             </flexbox>
-          </group>
+          </div>
           <div slot="pulldown" class="xs-plugin-pulldown-container xs-plugin-pulldown-down" style="position: absolute; width: 100%; height: 40px; top: -50px; text-align: center;">
             <span v-show="pulldownStatus === 'default'"></span>
             <span class="pullup-arrow" v-show="pulldownStatus === 'up' || pulldownStatus === 'down'" :class="{'rotate': pulldownStatus === 'down'}">↓</span>
@@ -55,7 +55,6 @@
   import Search from 'vux/components/search/'
   import Scroller from 'vux/components/scroller/'
   import Spinner from 'vux/components/spinner/'
-  import Group from 'vux/components/group/'
   import Flexbox from 'vux/components/flexbox/'
   import FlexboxItem from 'vux/components/flexbox-item/'
   import Icon from 'vux/components/icon/'
@@ -65,7 +64,7 @@
   let phoneNumber = '18617166210'
   let articleType = 'DISPATCH'
   export default {
-    ready: function () {
+    ready () {
       let params = {
         page: pageIndex,
         pageSize: pageCount,
@@ -101,7 +100,6 @@
       Search,
       Scroller,
       Spinner,
-      Group,
       Flexbox,
       FlexboxItem,
       Icon
@@ -199,8 +197,9 @@
 
 <style scoped>
   @import '../../static/css/public.css';
-  
   .title {
+    font-size: 14px;
+    font-weight: 400;
     color: #333;
     line-height: 1.5;
     overflow: hidden;
@@ -209,14 +208,9 @@
   }
   
   .info {
-    font-size: .8em;
+    font-size: 13px;
     color: #666;
-  }
-  
-  @media only screen and (min-width: 320px) and (max-width: 360px) {
-    .info {
-      font-size: .7em;
-    }
+    line-height: 1.5;
   }
   
   .flex20 {
@@ -225,6 +219,11 @@
     -ms-flex: 0 0 20px;
     -webkit-flex: 0 0 20px;
     flex: 0 0 20px;
+  }
+  
+  .box2-wrap {
+    height: 1750px;
+    overflow: hidden;
   }
   
   .pullup-arrow {

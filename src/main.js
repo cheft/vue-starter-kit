@@ -51,9 +51,14 @@ router.map({
       require(['./components/Meeting'], resolve)
     }
   },
-  '/address': {
+  '/contacts': {
     component: function (resolve) {
-      require(['./components/Address'], resolve)
+      require(['./components/Contacts'], resolve)
+    }
+  },
+  '/contacts-details/:id': {
+    component: function (resolve) {
+      require(['./components/ContactsDetails'], resolve)
     }
   }
 })

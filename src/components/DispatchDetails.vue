@@ -36,7 +36,7 @@
   import Icon from 'vux/components/icon/'
   import Spinner from 'vux/components/spinner/'
   export default {
-    ready: function () {
+    ready () {
       let params = {
         id: this.$route.params.id,
         type: 'DISPATCH'
@@ -81,35 +81,17 @@
 
 <style scoped>
   @import '../../static/css/public.css';
-  
   .title {
-    font-size: 1em;
+    font-size: 16px;
     color: #333;
     line-height: 1.5;
     text-align: center;
   }
   
   .info {
-    font-size: .8em;
+    font-size: 13px;
     color: #666;
-  }
-  
-  @media only screen and (min-width: 320px) and (max-width: 360px) {
-    .info {
-      font-size: .7em;
-    }
-  }
-  
-  .section-body {
-    padding: 15px 0;
-    border-top: 1px solid #02bb00;
-    border-bottom: 1px solid #e5e5e5;
-  }
-  
-  .section-body p {
-    margin-bottom: 1em;
-    color: #333;
-    line-height: 1.6;
+    line-height: 1.5;
   }
   
   .time-body {
@@ -118,6 +100,7 @@
   }
   
   .time-body time {
+    font-size: 13px;
     color: #666;
     line-height: 1.5;
   }

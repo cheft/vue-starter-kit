@@ -21,7 +21,7 @@
           <div class="text">
           会议</div>
         </a></flexbox-item>
-      <flexbox-item><a class="item item4" v-link="{path: '/address'}">
+      <flexbox-item><a class="item item4" v-link="{path: '/contacts'}">
           <div class="img yule"></div>
           <div class="text">
           通讯录</div>

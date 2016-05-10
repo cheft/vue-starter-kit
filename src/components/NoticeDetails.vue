@@ -36,7 +36,10 @@
               <a class="discuss" href="javascript:void(0);" @click="writeComment">我要评论</a>
             </flexbox-item>
           </flexbox>
-          <flexbox v-for="li in list" orient="vertical" class="flex-box-ver list">
+          <div v-if="noneComment" class="none-comment">
+            <p>暂无评论</p>
+          </div>
+          <flexbox v-else v-for="li in list" orient="vertical" class="flex-box-ver list">
             <flexbox-item>
               <flexbox :gutter="0">
                 <flexbox-item>
@@ -89,7 +92,7 @@
   let pageIndex = 1
   let pageCount = 10
   export default {
-    ready: function () {
+    ready () {
       let params = {
         id: this.$route.params.id,
         type: 'NOTICE'
@@ -124,6 +127,7 @@
         params: params1
       }).then(function (response) {
         if (response.data.code === 1000) {
+          this.noneComment = false
           this.list = response.data.data.items
           if (pageIndex < response.data.data.pageCount) {
             this.more = true
@@ -131,10 +135,12 @@
             this.more = false
           }
         } else {
-          this.tipInfo = response.data.msg
+          this.noneComment = true
+          this.tipComment = response.data.msg
         }
       }, function (response) {
-        this.tipInfo = response.data.msg
+        this.noneComment = true
+        this.tipComment = response.data.msg
       })
     },
     components: {
@@ -213,10 +219,10 @@
               this.more = false
             }
           } else {
-            this.tipInfo = response.data.msg
+            this.tipComment = response.data.msg
           }
         }, function (response) {
-          this.tipInfo = response.data.msg
+          this.tipComment = response.data.msg
         })
       }
     },
@@ -224,7 +230,9 @@
       return {
         isLoading: true,
         noneData: true,
+        noneComment: true,
         tipInfo: '正在加载中...',
+        tipComment: '正在加载中...',
         items: {},
         list: [],
         textVaule: '',
@@ -242,36 +250,39 @@
 
 <style scoped>
   @import '../../static/css/public.css';
-  
   .title {
-    font-size: 1em;
+    font-size: 16px;
     color: #333;
     line-height: 1.5;
     text-align: center;
   }
   
   .info {
-    font-size: .8em;
+    font-size: 13px;
     color: #666;
+    line-height: 1.5;
   }
   
   @media only screen and (min-width: 320px) and (max-width: 360px) {
     .info {
-      font-size: .7em;
+      font-size: 12px;
     }
   }
   
   .number {
+    font-size: 14px;
     color: #666;
     line-height: 1.5;
   }
   
   .name {
+    font-size: 14px;
     color: #999;
     line-height: 1.5;
   }
   
   .content {
+    font-size: 14px;
     color: #333;
     line-height: 1.5;
   }
@@ -284,6 +295,7 @@
   
   .discuss {
     display: block;
+    font-size: 14px;
     color: #02bb00;
     line-height: 1.5;
     text-align: right;
@@ -291,6 +303,18 @@
   
   .list {
     border-top: 1px dashed #e5e5e5;
+  }
+  
+  .none-comment {
+    border-top: 1px dashed #e5e5e5;
+  }
+  
+  .none-comment p {
+    padding: 8px 0;
+    font-size: 14px;
+    color: #999;
+    line-height: 1.5;
+    text-align: center;
   }
   
   .more {
@@ -301,7 +325,7 @@
   .more a {
     display: block;
     padding: 8px 0;
-    font-size: .8em;
+    font-size: 12px;
     color: #666;
     line-height: 1.5;
     text-align: center;
