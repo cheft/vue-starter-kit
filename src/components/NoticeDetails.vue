@@ -64,7 +64,7 @@
         </div>
         <popup :show.sync="show">
           <div class="popup-body">
-            <x-textarea :max=200 placeholder="请填写评论内容" @on-change="textChange" :value.sync='textVaule'></x-textarea>
+            <x-textarea v-text-focus="show" :max=200 placeholder="请填写评论内容" @on-change="textChange" :value.sync='textVaule'></x-textarea>
             <div class="flex-box">
               <x-button type="primary" @click="okSubmit" :disabled="disabled">提交</x-button>
             </div>
@@ -79,6 +79,7 @@
 </template>
 
 <script>
+  import Vue from 'vue'
   import Config from '../config'
   import Flexbox from 'vux/components/flexbox/'
   import FlexboxItem from 'vux/components/flexbox-item/'
@@ -92,7 +93,7 @@
   let pageIndex = 1
   let pageCount = 10
   export default {
-    ready () {
+    ready: function () {
       let params = {
         id: this.$route.params.id,
         type: 'NOTICE'
@@ -153,6 +154,17 @@
       XTextarea,
       XButton,
       Toast
+    },
+    directives: {
+      'text-focus': function (isShow) {
+        if (!isShow) {
+          return
+        }
+        var text = this.el.querySelector('textarea')
+        Vue.nextTick(function () {
+          text.focus()
+        })
+      }
     },
     methods: {
       writeComment: function () {
@@ -246,6 +258,7 @@
       }
     }
   }
+
 </script>
 
 <style scoped>
@@ -256,43 +269,43 @@
     line-height: 1.5;
     text-align: center;
   }
-  
+
   .info {
     font-size: 13px;
     color: #666;
     line-height: 1.5;
   }
-  
+
   @media only screen and (min-width: 320px) and (max-width: 360px) {
     .info {
       font-size: 12px;
     }
   }
-  
+
   .number {
     font-size: 14px;
     color: #666;
     line-height: 1.5;
   }
-  
+
   .name {
     font-size: 14px;
     color: #999;
     line-height: 1.5;
   }
-  
+
   .content {
     font-size: 14px;
     color: #333;
     line-height: 1.5;
   }
-  
+
   .time {
     font-size: .8em;
     color: #999;
     line-height: 1.5;
   }
-  
+
   .discuss {
     display: block;
     font-size: 14px;
@@ -300,15 +313,15 @@
     line-height: 1.5;
     text-align: right;
   }
-  
+
   .list {
     border-top: 1px dashed #e5e5e5;
   }
-  
+
   .none-comment {
     border-top: 1px dashed #e5e5e5;
   }
-  
+
   .none-comment p {
     padding: 8px 0;
     font-size: 14px;
@@ -316,12 +329,12 @@
     line-height: 1.5;
     text-align: center;
   }
-  
+
   .more {
     border: 1px solid #e5e5e5;
     border-radius: 3px;
   }
-  
+
   .more a {
     display: block;
     padding: 8px 0;
