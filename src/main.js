@@ -21,14 +21,14 @@ router.map({
       require(['./components/Setting'], resolve)
     }
   },
-  '/announcement': {
+  '/dispatch': {
     component: function (resolve) {
-      require(['./components/Announcement'], resolve)
+      require(['./components/Dispatch'], resolve)
     }
   },
-  '/announcement-details': {
+  '/dispatch-details/:id': {
     component: function (resolve) {
-      require(['./components/AnnouncementDetails'], resolve)
+      require(['./components/DispatchDetails'], resolve)
     }
   },
   '/notice': {
@@ -36,7 +36,7 @@ router.map({
       require(['./components/Notice'], resolve)
     }
   },
-  '/notice-details': {
+  '/notice-details/:id': {
     component: function (resolve) {
       require(['./components/NoticeDetails'], resolve)
     }

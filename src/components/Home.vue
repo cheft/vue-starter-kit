@@ -8,7 +8,7 @@
         <a class="item item1" v-link="{path: '/notice'}">
           <div class="img meishi"></div>
           <div class="text">
-          通知</div>
+          公告</div>
         </a>
       </flexbox-item>
       <flexbox-item class="ui-border-r"><a class="item item2" v-link="{path: '/flow'}">
@@ -28,10 +28,10 @@
         </a></flexbox-item>
     </flexbox>
     <flexbox class="ui-border-b" :margin-left=0>
-      <flexbox-item class="ui-border-r"><a class="item item5" v-link="{path: '/setting'}">
+      <flexbox-item class="ui-border-r"><a class="item item5" v-link="{path: '/dispatch'}">
           <div class="img huoguo"></div>
           <div class="text">
-          设置</div>
+          发文</div>
         </a></flexbox-item>
        <flexbox-item class="ui-border-r"><a class="item item6" v-link="{path: '/setting'}">
           <div class="img lvyou"></div>

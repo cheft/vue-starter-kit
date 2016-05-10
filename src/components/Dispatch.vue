@@ -10,49 +10,41 @@
       </div>
       <div v-else class="list-body">
         <scroller lock-x scrollbar-y use-pulldown use-pullup :pulldown-status.sync="pulldownStatus" :pullup-status.sync="pullupStatus" @pulldown:loading="loadDown" @pullup:loading="loadUp" class="scroll-body">
-          <div class="box2">
-            <group v-for="item in items" class="group-body" v-link="'notice-details/' + item.id">
-              <flexbox :gutter="0" class="flex-box">
-                <flexbox-item>
-                  <flexbox :gutter="0" orient="vertical">
-                    <flexbox-item>
-                      <h5 class="title">{{ item.title }}</h5>
-                    </flexbox-item>
-                    <flexbox-item>
-                      <flexbox :gutter="0">
-                        <flexbox-item>
-                          <span class="info">{{ item.personName }}</span>
-                          <time class="info">{{ item.date }}</time>
-                        </flexbox-item>
-                        <flexbox-item :span="3">
-                          <label class="info">阅读:</label>
-                          <span class="info">{{ item.clickCount }}</span>
-                        </flexbox-item>
-                        <flexbox-item :span="3">
-                          <label class="info">评论:</label>
-                          <span class="info">{{ item.commentsCount }}</span>
-                        </flexbox-item>
-                      </flexbox>
-                    </flexbox-item>
-                  </flexbox>
-                </flexbox-item>
-                <flexbox-item class="flex20">
-                  <i class="arrow"></i>
-                </flexbox-item>
-              </flexbox>
-            </group>
-          </div>
-          <div slot="pulldown" class="xs-plugin-pulldown-container xs-plugin-pulldown-down" style="position: absolute; width: 100%; height: 40px; top: -40px; text-align: center;">
+          <group v-for="item in items" class="group-body" v-link="'dispatch-details/' + item.id">
+            <flexbox :gutter="0" class="flex-box">
+              <flexbox-item>
+                <flexbox :gutter="0" orient="vertical">
+                  <flexbox-item>
+                    <h5 class="title">{{ item.title }}</h5>
+                  </flexbox-item>
+                  <flexbox-item>
+                    <flexbox :gutter="0">
+                      <flexbox-item>
+                        <span class="info">{{ item.head }}</span>
+                      </flexbox-item>
+                      <flexbox-item :span="4">
+                        <time class="info">{{ item.date }}</time>
+                      </flexbox-item>
+                    </flexbox>
+                  </flexbox-item>
+                </flexbox>
+              </flexbox-item>
+              <flexbox-item class="flex20">
+                <i class="arrow"></i>
+              </flexbox-item>
+            </flexbox>
+          </group>
+          <div slot="pulldown" class="xs-plugin-pulldown-container xs-plugin-pulldown-down" style="position: absolute; width: 100%; height: 40px; top: -50px; text-align: center;">
             <span v-show="pulldownStatus === 'default'"></span>
-            <span class="pulldown-arrow" v-show="pulldownStatus === 'down' || pulldownStatus === 'up'" :class="{'rotate': pulldownStatus === 'up'}">↓</span>
+            <span class="pullup-arrow" v-show="pulldownStatus === 'up' || pulldownStatus === 'down'" :class="{'rotate': pulldownStatus === 'down'}">↓</span>
             <span v-show="pulldownStatus === 'loading'"><spinner type="ios-small"></spinner></span>
           </div>
-          <div slot="pullup" class="xs-plugin-pullup-container xs-plugin-pullup-up" style="position: absolute; width: 100%; height: 40px; bottom: -40px; text-align: center;">
+          <div slot="pullup" class="xs-plugin-pullup-container xs-plugin-pullup-up" style="position: absolute; width: 100%; height: 40px; bottom: -50px; text-align: center;">
             <span v-show="pullupStatus === 'default'"></span>
             <span class="pullup-arrow" v-show="pullupStatus === 'down' || pullupStatus === 'up'" :class="{'rotate': pullupStatus === 'up'}">↑</span>
             <span v-show="pullupStatus === 'loading'"><spinner type="ios-small"></spinner></span>
           </div>
-        </scroller>
+        </scroller> 
       </div>
     </template>
   </div>
@@ -69,9 +61,9 @@
   import Icon from 'vux/components/icon/'
   let urlAddress = Config.apiPrefix + 'notice/list'
   let pageIndex = 1
-  let pageCount = 10
+  let pageCount = 1
   let phoneNumber = '18617166210'
-  let articleType = 'NOTICE'
+  let articleType = 'DISPATCH'
   export default {
     ready: function () {
       let params = {
@@ -160,13 +152,11 @@
         }).then(function (response) {
           if (response.data.code === 1000) {
             _this.items = _this.items.concat(response.data.data.items)
-            setTimeout(function () {
-              if (pageIndex < response.data.data.pageCount) {
-                _this.$broadcast('pullup:reset', uuid)
-              } else {
-                _this.$broadcast('pullup:done', uuid)
-              }
-            }, 100)
+            if (pageIndex < response.data.data.pageCount) {
+              _this.$broadcast('pullup:reset', uuid)
+            } else {
+              _this.$broadcast('pullup:done', uuid)
+            }
           } else {
             _this.$broadcast('pullup:done', uuid)
           }
@@ -188,6 +178,7 @@
       }
     }
   }
+
   function getResult (val) {
     let rs = []
     for (let i = 0; i < 40; i++) {
@@ -228,23 +219,14 @@
     }
   }
   
-  time.info {
-    margin-left: .5em;
-  }
-
   .flex20 {
-    -webkit-box-flex: 0 0 20px; 
-    -o-box-flex: 0 0 20px; 
-    -ms-flex: 0 0 20px; 
-    -webkit-flex: 0 0 20px; 
+    -webkit-box-flex: 0 0 20px;
+    -o-box-flex: 0 0 20px;
+    -ms-flex: 0 0 20px;
+    -webkit-flex: 0 0 20px;
     flex: 0 0 20px;
   }
   
-  .box2-wrap {
-    height: 1750px;
-    overflow: hidden;
-  }
-
   .pullup-arrow {
     -webkit-transition: all linear 0.2s;
     -moz-transition: all linear 0.2s;

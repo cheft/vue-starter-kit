@@ -1,72 +1,72 @@
 <template>
-  <div class="flow-body">
-    <search @result-click="resultClick" @on-change="getResult" :results="results" :value.sync="value" class="search-body"></search>
-    <scroller lock-x scrollbar-y use-pulldown use-pullup :pulldown-status.sync="pulldownStatus" :pullup-status.sync="pullupStatus" @pulldown:loading="loadDown" @pullup:loading="loadUp" class="scroll-body">
-      <group v-for="item in items" class="group-body" v-link="{path: '/notice'}">
-        <flexbox :gutter="0" class="flex-box">
-          <flexbox-item>
-            <flexbox :gutter="0" orient="vertical">
-              <flexbox-item>
-                <h5 class="title">{{ item[0] }}</h5>
-              </flexbox-item>
-              <flexbox-item>
-                <flexbox :gutter="0">
-                  <flexbox-item>
-                    <label class="info">发起时间:</label>
-                    <time class="info">{{ item[1] }}</time>
-                  </flexbox-item>
-                  <flexbox-item :span="4">
-                    <span class="info" :class="item[3] === '0' ? 'yellow' : item[3] === '1' ? 'green' : 'red'">{{ item[2] }}</span>
-                  </flexbox-item>
-                </flexbox>
-              </flexbox-item>
-            </flexbox>
-          </flexbox-item>
-          <flexbox-item :span="1">
-            <i class="arrow"></i>
-          </flexbox-item>
-        </flexbox>
-      </group>
-      <div slot="pulldown" class="xs-plugin-pulldown-container xs-plugin-pulldown-down" style="position: absolute; width: 100%; height: 40px; top: -50px; text-align: center;">
-        <span v-show="pulldownStatus === 'default'"></span>
-        <span class="pullup-arrow" v-show="pulldownStatus === 'up' || pulldownStatus === 'down'" :class="{'rotate': pulldownStatus === 'down'}">↓</span>
-        <span v-show="pulldownStatus === 'loading'"><spinner type="ios-small"></spinner></span>
-      </div>
-      <div slot="pullup" class="xs-plugin-pullup-container xs-plugin-pullup-up" style="position: absolute; width: 100%; height: 40px; bottom: -50px; text-align: center;">
-        <span v-show="pullupStatus === 'default'"></span>
-        <span class="pullup-arrow" v-show="pullupStatus === 'down' || pullupStatus === 'up'" :class="{'rotate': pullupStatus === 'up'}">↑</span>
-        <span v-show="pullupStatus === 'loading'"><spinner type="ios-small"></spinner></span>
+  <div>
+    <scroller lock-x scrollbar-y use-pulldown use-pullup :pulldown-status.sync="pulldownStatus" :pullup-status.sync="pullupStatus" @pulldown:loading="loadDown" @pullup:loading="loadUp">
+      <div class="box2">
+        <group v-for="item in items" class="group-body" v-link="'notice-details/' + item.id">
+          <flexbox :gutter="0" class="flex-box">
+            <flexbox-item>
+              <flexbox :gutter="0" orient="vertical">
+                <flexbox-item>
+                  <h5 class="title">{{ item.title }}</h5>
+                </flexbox-item>
+                <flexbox-item>
+                  <flexbox :gutter="0">
+                    <flexbox-item>
+                      <span class="info">{{ item.personName }}</span>
+                      <time class="info">{{ item.date }}</time>
+                    </flexbox-item>
+                    <flexbox-item :span="3">
+                      <label class="info">阅读:</label>
+                      <span class="info">{{ item.clickCount }}</span>
+                    </flexbox-item>
+                    <flexbox-item :span="3">
+                      <label class="info">评论:</label>
+                      <span class="info">{{ item.commentsCount }}</span>
+                    </flexbox-item>
+                  </flexbox>
+                </flexbox-item>
+              </flexbox>
+            </flexbox-item>
+            <flexbox-item class="flex20">
+              <i class="arrow"></i>
+            </flexbox-item>
+          </flexbox>
+        </group>
+        <div slot="pulldown" class="xs-plugin-pulldown-container xs-plugin-pulldown-down" style="position: absolute; width: 100%; height: 60px; line-height: 60px; top: -60px; text-align: center;">
+          <span v-show="pulldownStatus === 'default'"></span>
+          <span class="pulldown-arrow" v-show="pulldownStatus === 'down' || pulldownStatus === 'up'" :class="{'rotate': pulldownStatus === 'up'}">↓</span>
+          <span v-show="pulldownStatus === 'loading'"><spinner type="ios-small"></spinner></span>
+        </div>
+        <div slot="pullup" class="xs-plugin-pullup-container xs-plugin-pullup-up" style="position: absolute; width: 100%; height: 40px; bottom: -40px; text-align: center;">
+          <span v-show="pullupStatus === 'default'"></span>
+          <span class="pullup-arrow" v-show="pullupStatus === 'down' || pullupStatus === 'up'" :class="{'rotate': pullupStatus === 'up'}">↑</span>
+          <span v-show="pullupStatus === 'loading'"><spinner type="ios-small"></spinner></span>
+        </div>
       </div>
     </scroller>
   </div>
 </template>
 
 <script>
-  import Search from 'vux/components/search/'
   import Scroller from 'vux/components/scroller/'
   import Spinner from 'vux/components/spinner/'
   import Group from 'vux/components/group/'
   import Flexbox from 'vux/components/flexbox/'
   import FlexboxItem from 'vux/components/flexbox-item/'
+  import Icon from 'vux/components/icon/'
+  
   export default {
     components: {
-      Search,
       Scroller,
       Spinner,
       Group,
       Flexbox,
-      FlexboxItem
+      FlexboxItem,
+      Icon
     },
     methods: {
-      resultClick: function (item) {
-        window.alert('you click the result item: ' + JSON.stringify(item))
-      },
-      getResult: function (val) {
-        this.results = getResult(this.value)
-      },
       loadDown: function (uuid) {
         const _this = this
-        console.log(_this.pulldownStatus)
         setTimeout(function () {
           _this.$broadcast('pulldown:reset', uuid)
         }, 1000)
@@ -74,116 +74,80 @@
       loadUp: function (uuid) {
         const _this = this
         setTimeout(function () {
-          _this.$broadcast('pullup:done', uuid)
-        }, 1000)
+          _this.items = _this.items.concat([{'title': '333'}, {'title': '333'}, {'title': '333'}, {'title': '333'}, {'title': '333'}, {'title': '333'}, {'title': '333'}, {'title': '333'}, {'title': '333'}, {'title': '333'}])
+          setTimeout(function () {
+            _this.$broadcast('pullup:reset', uuid)
+            _this.$broadcast('pullup:done', uuid)
+          }, 10)
+        }, 2000)
       }
     },
     data () {
       return {
-        items: [['转正申请', '2016-04-01', '等待审批', '0'], ['调动申请', '2016-04-24', '审批通过', '1'], ['调休申请', '2016-04-24', '审批不通过', '-1']],
-        results: [],
-        value: '',
-        pullupStatus: 'default',
-        pulldownStatus: 'default'
+        items: [{'title': '333'}, {'title': '333'}, {'title': '333'}, {'title': '333'}, {'title': '333'}, {'title': '333'}, {'title': '333'}, {'title': '333'}, {'title': '333'}, {'title': '333'}],
+        pullupStatus: 'default'
       }
     }
   }
-  function getResult (val) {
-    let rs = []
-    for (let i = 0; i < 40; i++) {
-      rs.push({
-        title: `${val} result: ${i + 1}`,
-        other: i
-      })
-    }
-    return rs
-  }
 </script>
 
-<style scoped>
-.flow-body {
-  background-color: #f8f8f8;  
-}
-
-.search-body {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: auto;
-  left: 0;
-  z-index: 100;
-}
-
-.scroll-body {
-  padding-top: 44px;
-  box-sizing: border-box;
-}
-
-.group-body .weui_cells {
-  margin-top: 15px;
-}
-
-.flex-box {
-  padding: 10px;
-  box-sizing: border-box;
-}
-
-.title {
-  color: #333;
-  line-height: 1.5;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.info {
-  font-size: .8em;
-  color: #666;
-}
-
-@media only screen and (min-width: 320px) and (max-width: 360px) {
-  .info {
-    font-size: .7em;
+<style>
+  .weui_cells {
+    margin-top: 10px;
   }
-}
+</style>
 
-.yellow {
-  color: #f90;
-}
+<style scoped>
+  @import '../../static/css/public.css';
+  
+  .title {
+    color: #333;
+    line-height: 1.5;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .info {
+    font-size: .8em;
+    color: #666;
+  }
+  
+  @media only screen and (min-width: 320px) and (max-width: 360px) {
+    .info {
+      font-size: .7em;
+    }
+  }
+  
+  time.info {
+    margin-left: .5em;
+  }
 
-.green {
-  color: #04be02;
-}
+  .flex20 {
+    -webkit-box-flex: 0 0 20px; 
+    -o-box-flex: 0 0 20px; 
+    -ms-flex: 0 0 20px; 
+    -webkit-flex: 0 0 20px; 
+    flex: 0 0 20px;
+  }
+  
+  .box2-wrap {
+    height: 1750px;
+    overflow: hidden;
+  }
 
-.red {
-  color: #dd0000;
-}
-
-.arrow {
-  content: " ";
-  display: block;
-  -webkit-transform: rotate(45deg);
-  -moz-transform: rotate(45deg);
-  transform: rotate(45deg);
-  height: 10px;
-  width: 10px;
-  border-width: 2px 2px 0 0;
-  border-color: #c8c8cd;
-  border-style: solid;
-}
-
-.pullup-arrow {
-  -webkit-transition: all linear 0.2s;
-  -moz-transition: all linear 0.2s;
-  transition: all linear 0.2s;
-  color: #666;
-  font-size: 25px;
-}
-
-.rotate {
-  display: inline-block;
-  -webkit-transform: rotate(-180deg);
-  -moz-transform: rotate(-180deg);
-  transform: rotate(-180deg);
-}
+  .pullup-arrow {
+    -webkit-transition: all linear 0.2s;
+    -moz-transition: all linear 0.2s;
+    transition: all linear 0.2s;
+    color: #666;
+    font-size: 25px;
+  }
+  
+  .rotate {
+    display: inline-block;
+    -webkit-transform: rotate(-180deg);
+    -moz-transform: rotate(-180deg);
+    transform: rotate(-180deg);
+  }
 </style>
