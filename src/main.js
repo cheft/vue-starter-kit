@@ -16,11 +16,6 @@ router.map({
       require(['./components/Home'], resolve)
     }
   },
-  '/setting': {
-    component: function (resolve) {
-      require(['./components/Setting'], resolve)
-    }
-  },
   '/dispatch': {
     component: function (resolve) {
       require(['./components/Dispatch'], resolve)
@@ -65,15 +60,4 @@ router.map({
 
 router.start(App, 'app')
 
-// router.beforeEach(function (transition) {
-//   // router.app.$refs.nav.$set('path', transition.to.path)
-//   transition.next()
-// })
-
 FastClick.attach(document.body)
-// if ('addEventListener' in document) {
-//   document.addEventListener('DOMContentLoaded', function () {
-//     /* eslint-disable no-undef */
-//     FastClick.attach(document.body)
-//   }, false)
-// }
