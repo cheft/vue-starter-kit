@@ -1,44 +1,34 @@
 <template>
   <div>
-    <!--
-    <scroller lock-y scrollbar-x :bounce=false style="padding: 10px">
-      <div class="box1"  style="width: {{totalWidth}}px;">
-        <div class="box1-item" v-for="i in 14" style="width: {{width}}px; height: {{height}}px;" ><span>{{' ' + i + ' '}}</span></div>
-      </div>
-    </scroller>
-    -->
     <div style="padding: 10px;">
-      <swiper :height="height" v-ref:meetings :list="list">
+      <swiper :height="height" v-ref:meetings :list="test">
         <swiper-item class="swiper-item" v-for="m in meetings">
           <h4 class="title fadeInUp animated">{{m.name}} (限 {{m.number}} 人)</h4>
           <flexbox>
-            <flexbox-item><div class="time-item">9~10</div></flexbox-item>
-            <flexbox-item><div class="time-item time-item-yes">15~16</div></flexbox-item>
+            <flexbox-item><div class="time-item">9 ~ 10</div></flexbox-item>
+            <flexbox-item v-on:click="call">
+              <div class="time-item time-item-reserved">10 ~ 11 技术中心-陈某某-技术会</div>
+            </flexbox-item>
+            <flexbox-item><div class="time-item time-item-reserved">11 ~ 12</div></flexbox-item>
+          </flexbox>
+          <div class="split-text">上午</div>
+          <hr class="split-hr">
+          <div class="split-text">下午</div>
+          <flexbox>
+            <flexbox-item><div class="time-item">14 ~ 15</div></flexbox-item>
+            <flexbox-item><div class="time-item">15 ~ 16</div></flexbox-item>
+            <flexbox-item><div class="time-item">16 ~ 17</div></flexbox-item>
           </flexbox>
           <flexbox>
-            <flexbox-item><div class="time-item">10~11</div></flexbox-item>
-            <flexbox-item><div class="time-item">16~17</div></flexbox-item>
-          </flexbox>
-          <flexbox>
-            <flexbox-item><div class="time-item time-item-yes">11~12</div></flexbox-item>
-            <flexbox-item><div class="time-item">17~18</div></flexbox-item>
-          </flexbox>
-          <flexbox>
-            <flexbox-item><div class="time-item">12~13</div></flexbox-item>
-            <flexbox-item><div class="time-item">18~19</div></flexbox-item>
-          </flexbox>
-          <flexbox>
-            <flexbox-item><div class="time-item">13~14</div></flexbox-item>
-            <flexbox-item><div class="time-item">19~20</div></flexbox-item>
-          </flexbox>
-          <flexbox>
-            <flexbox-item><div class="time-item">14~15</div></flexbox-item>
-            <flexbox-item><div class="time-item time-item-yes">20~21</div></flexbox-item>
+            <flexbox-item><div class="time-item">17 ~ 18</div></flexbox-item>
+            <flexbox-item><div class="time-item">18 ~ 19</div></flexbox-item>
+            <flexbox-item><div class="time-item">19 ~ 20</div></flexbox-item>
           </flexbox>
         </swiper-item>
       </swiper>
     </div>
-    <range slot="value" :value.sync="curMeeting" :min="0" :max="meetingsLen" min-HTML="<span style='font-size:12px;'>楼下</span>" max-HTML="<span style='font-size:12px;'>楼上</span>"></range>
+
+    <range v-ref:range slot="value" :value.sync="curMeeting" :min="0" :max="meetingsLen" min-HTML="<span style='font-size:12px;'>6楼</span>" max-HTML="<span style='font-size:12px;'>10楼</span>"></range>
     <tabbar>
       <tabbar-item selected>
         <span slot="icon">周二</span>
@@ -66,9 +56,37 @@
   import FlexboxItem from 'vux/components/flexbox-item'
   import Tabbar from 'vux/components/tabbar'
   import TabbarItem from 'vux/components/tabbar-item'
-  import Config from '../config'
+  import config from '../config'
 
-  let getMeetingUrl = Config.apiPrefix + 'meeting/meetingList'
+  let getMeetingUrl = config.apiPrefix + 'meeting/meetingList'
+  let getReserveList = config.apiPrefix + 'meeting/reserveList'
+
+  let reserveList = [
+    {
+      id: '88cf361b-4b48-4c15-b566-a9934346a43d',
+      conferenceName: '大培训室',
+      conferenceId: '会议室ID',
+      storey: '7',
+      orgName: 'ERP研发部',
+      mobile: '15999999999',
+      personName: '张三',
+      useDate: '2016-05-10',
+      startDate: '10',
+      endDate: '12'
+    },
+    {
+      id: '88cf361b-4b48-4c15-b566-a9934346a43d',
+      conferenceName: '大培训室',
+      conferenceId: '会议室ID',
+      storey: '7',
+      orgName: 'ERP研发部',
+      mobile: '15999999999',
+      personName: '李四',
+      useDate: '2016-05-10',
+      startDate: '15',
+      endDate: '18'
+    }
+  ]
 
   export default {
     components: {
@@ -96,7 +114,7 @@
     },
 
     ready () {
-      this.fetch()
+      this.fetchMeetings()
       var _this = this
       this.$refs.meetings.$watch('current', function (val) {
         _this.$set('curMeeting', val)
@@ -104,28 +122,44 @@
     },
 
     methods: {
-      fetch: function () {
+      fetchMeetings: function () {
         var _this = this
-        this.$http({url: getMeetingUrl, method: 'POST', params: {storey: 6}}).then(function (response) {
-          console.log(response)
+        this.$http({url: getMeetingUrl, method: 'POST'}).then(function (response) {
           _this.$set('meetings', response.data.data.items)
-          _this.$set('meetingsLen', response.data.data.items.length)
+          _this.fetchReserveList()
         }, function (response) {
           console.log(response)
         })
+      },
+
+      fetchReserveList: function () {
+        // var _this = this
+        this.$http({url: getReserveList, method: 'POST', params: {storey: 6, date: '2016-05-10'}}).then(function (response) {
+          console.log(response)
+          this.$set('reserveList', reserveList)
+        }, function (response) {
+          console.log(response)
+        })
+      },
+
+      /* eslint-disable no-undef */
+      call: function () {
+        location.href = 'tel:13316463314'
       }
     },
 
     /* eslint-disable no-undef */
     data () {
       return {
+        rangeView: 'Range',
         color1: '#FFEF7D',
         colors1: ['#FF3B3B', '#FFEF7D', '#8AEEB1'],
         height: $(window).height() - 120 + '',
         curMeeting: 0,
-        list: [],
+        test: [],
         meetings: [],
-        meetingsLen: 0
+        meetingsLen: 13,
+        reserveList: []
         // width: $(window).width() - 20,
         // totalWidth: $(window).width() * 14 - 20
       }
@@ -167,16 +201,27 @@
 }
 
 .time-item {
-  height: 68px;
-  line-height: 68px;
-  background: #71D571;
+  height: 100px;
+  line-height: 100px;
+  background: #ddd;
   text-align: center;
   color: #fff;
   border: 1px solid #fff;
 }
 
-.time-item-yes {
-  background: #ddd;
+.time-item-reserved {
+  background: #71D571;
+}
+
+.split-text {
+  font-size: 13px;
+  line-height: 13px;
+  margin: 10px;
+  color: #888;
+}
+
+.split-hr {
+  margin: 10px 0;
 }
 
 .weui_tabbar_item .weui_tabbar_icon {
@@ -185,6 +230,9 @@
 }
 .weui_bar_item_on .weui_tabbar_icon {
   color: #09bb07;
+}
+.range-max, .range-min {
+  width: 30px;
 }
 
 </style>
