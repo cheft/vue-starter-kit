@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import Search from 'vux/components/search'
+import Search from './MySearch'
 import Blur from 'vux/components/blur'
 import Group from 'vux/components/group'
 import Cell from 'vux/components/cell'
