@@ -3,26 +3,90 @@
     <div style="padding: 10px;">
       <swiper :height="height" v-ref:meetings :list="test">
         <swiper-item class="swiper-item" v-for="m in meetings">
-          <h4 class="title fadeInUp animated">{{m.name}} (限 {{m.number}} 人)</h4>
+          <div class="title fadeInUp animated">{{m.name}} (限 {{m.number}} 人)</div>
           <flexbox>
-            <flexbox-item><div class="time-item">9 ~ 10</div></flexbox-item>
-            <flexbox-item v-on:click="call">
-              <div class="time-item time-item-reserved">10 ~ 11 技术中心-陈某某-技术会</div>
+            <flexbox-item>
+              <div class="time-item">
+                <div class="item-footer">9 - 10 点</div>
+                <div class="item-body">
+                  <i class="iconfont icon-yuding"></i>
+                  <div>请选择</div>
+                </div>
+              </div>
             </flexbox-item>
-            <flexbox-item><div class="time-item time-item-reserved">11 ~ 12</div></flexbox-item>
+            <flexbox-item v-on:click="call">
+              <div class="time-item time-item-reserved">
+                <div class="item-footer">10 - 11 点</div>
+                <div class="item-body">技术中心-陈某某-技术会</div>
+              </div>
+            </flexbox-item>
+            <flexbox-item>
+              <div class="time-item">
+                <div class="item-footer">11 - 12 点</div>
+                <div class="item-body">
+                  <i class="iconfont icon-yuding"></i>
+                  <div>请选择</div>
+                </div>
+              </div>
+            </flexbox-item>
           </flexbox>
-          <div class="split-text">上午</div>
+          <div class="split-text"><i class="iconfont icon-arrowtopo"></i> 上午</div>
           <hr class="split-hr">
-          <div class="split-text">下午</div>
+          <div class="split-text"><i class="iconfont icon-arrowdowno"></i> 下午</div>
           <flexbox>
-            <flexbox-item><div class="time-item">14 ~ 15</div></flexbox-item>
-            <flexbox-item><div class="time-item">15 ~ 16</div></flexbox-item>
-            <flexbox-item><div class="time-item">16 ~ 17</div></flexbox-item>
+            <flexbox-item>
+              <div class="time-item">
+                <div class="item-footer">14 - 15 点</div>
+                <div class="item-body">
+                  <i class="iconfont icon-yuding"></i>
+                  <div>请选择</div>
+                </div>
+              </div>
+            </flexbox-item>
+            <flexbox-item>
+              <div class="time-item">
+                <div class="item-footer">15 - 16 点</div>
+                <div class="item-body">
+                  <i class="iconfont icon-yuding"></i>
+                  <div>请选择</div>
+                </div>
+              </div>
+            </flexbox-item>
+            <flexbox-item>
+              <div class="time-item">
+                <div class="item-footer">16 - 17 点</div>
+                <div class="item-body">
+                  <i class="iconfont icon-yuding"></i>
+                  <div>请选择</div>
+                </div>
+              </div>
+            </flexbox-item>
           </flexbox>
           <flexbox>
-            <flexbox-item><div class="time-item">17 ~ 18</div></flexbox-item>
-            <flexbox-item><div class="time-item">18 ~ 19</div></flexbox-item>
-            <flexbox-item><div class="time-item">19 ~ 20</div></flexbox-item>
+            <flexbox-item>
+              <div class="time-item">
+                <div class="item-footer">17 - 18 点</div>
+                <div class="item-body">
+                  <i class="iconfont icon-yuding"></i>
+                  <div>请选择</div>
+                </div>
+              </div>
+            </flexbox-item>
+            <flexbox-item>
+              <div class="time-item">
+                <div class="item-footer">18 - 19 点</div>
+                <div class="item-body">
+                  <i class="iconfont icon-yuding"></i>
+                  <div>请选择</div>
+                </div>
+              </div>
+            </flexbox-item>
+            <flexbox-item>
+              <div class="time-item time-item-reserved">
+                <div class="item-footer">19 - 20 点</div>
+                <div class="item-body">技术中心-陈某某-技术会</div>
+              </div>
+            </flexbox-item>
           </flexbox>
         </swiper-item>
       </swiper>
@@ -174,6 +238,12 @@
   }
 </script>
 <style>
+.title {
+  height: 60px;
+  line-height: 60px;
+  font-weight: 700;
+}
+
 .swiper-item {
  /* width: 100px;
   height: 150px;*/
@@ -201,16 +271,50 @@
 }
 
 .time-item {
-  height: 100px;
-  line-height: 100px;
-  background: #ddd;
+  height: 120px;
+  line-height: 120px;
+  background: #4CAF50;
   text-align: center;
   color: #fff;
   border: 1px solid #fff;
+  border-radius: 3px;
+  margin-top: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.item-body {
+  height: 56px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  padding: 20px 4px 4px 0;
+  line-height: 24px;
+  font-size: 14px;
+}
+
+.item-body .icon-yuding {
+  font-size: 32px;
+}
+
+.time-item-reserved .item-body {
+  line-height: 20px;
+  font-size: 14px;
+}
+
+.item-footer {
+  height: 40px;
+  background-color: #388E3C;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 40px;
+}
+
+.time-item-reserved .item-footer {
+  background-color: #F57C00;
 }
 
 .time-item-reserved {
-  background: #71D571;
+  background: #FF9800;
 }
 
 .split-text {
@@ -221,18 +325,47 @@
 }
 
 .split-hr {
-  margin: 10px 0;
+  margin: 15px 0;
+  border: 1px dotted #DA9F5F;
 }
 
 .weui_tabbar_item .weui_tabbar_icon {
   color: #888;
   height: inherit;
 }
-.weui_bar_item_on .weui_tabbar_icon {
-  color: #09bb07;
+
+.weui_tabbar_item.weui_bar_item_on {
+  background: #FF992D;
+  color: #fff;
 }
+
+.weui_tabbar_item.weui_bar_item_on .weui_tabbar_label {
+  color: #fff;
+}
+
+.weui_bar_item_on .weui_tabbar_icon {
+  color: #fff;
+}
+
 .range-max, .range-min {
   width: 30px;
 }
 
+.range-handle {
+  width: 20px;
+  height: 20px;
+  margin-top: 5px;
+}
+
+.range-quantity {
+  background-color: #DA9F5F;
+}
+
+.range-bar {
+  background-color: #04be02;
+}
+
+.range-max, .range-min {
+  color: #DA9F5F;
+}
 </style>
