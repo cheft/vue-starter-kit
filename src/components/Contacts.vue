@@ -1,12 +1,19 @@
 <template>
   <div class="page-body">
-    <search @result-click="resultClick" @on-change="getResult" :results="results" :value.sync="value" class="search-body" placeholder="输入关键词" cancel-text="取消"></search>
-    <div class="personal-list">
+    <search @on-change="getResult" :results="results" :value.sync="value" class="search-body" placeholder="输入关键词" cancel-text="取消"></search>
+    <div v-if="isHistorys" class="personal-list">
+      <div class="history-body">
+        <flexbox :gutter="0">
+          <flexbox-item>
+            <p>历史搜索记录</p>
+          </flexbox-item>
+          <flexbox-item>
+            <p style="text-align: right;">共{{ items.length }}条记录</p>
+          </flexbox-item>
+        </flexbox>
+      </div>
       <div v-for="item in items" class="group-body" v-link="'contacts-details/' + item.id">
         <flexbox :gutter="0" class="flex-box">
-          <flexbox-item class="flex60">
-            <p class="head-portrait"><img :src="url" /></p>
-          </flexbox-item>
           <flexbox-item>
             <flexbox :gutter="0" orient="vertical">
               <flexbox-item>
@@ -28,54 +35,73 @@
 
 <script>
   import Config from '../config'
-  import Search from 'vux/components/search'
+  import Search from './MySearch'
   import Flexbox from 'vux/components/flexbox'
   import FlexboxItem from 'vux/components/flexbox-item/'
+  import Spinner from 'vux/components/spinner/'
+  import Icon from 'vux/components/icon/'
   let urlAddress = Config.apiPrefix + 'contactsList'
   let phoneNumber = '18617166210'
   export default {
     ready () {
-      let params = {
-        keyword: '黄亮',
-        mobile: phoneNumber
-      }
-      this.$http({
-        url: urlAddress,
-        method: 'POST',
-        params: params
-      }).then(function (response) {
-        if (response.data.code === 1000) {
-          this.items = response.data.data.items
-        } else {
-          this.tipInfo = response.data.msg
-        }
-      }, function (response) {
-        this.tipInfo = response.statusText
-      })
+      let s = '黄亮'
+      window.localStorage.setItem('historys', s)
+      let historys = window.localStorage.getItem('historys')
+      console.log(historys)
     },
     components: {
-      Config,
       Search,
       Flexbox,
-      FlexboxItem
+      FlexboxItem,
+      Spinner,
+      Icon
     },
     methods: {
-      resultClick: function (item) {
-        console.log(1)
-      },
       getResult: function (val) {
-        console.log(12)
+        if (val !== '') {
+          searchInfo(this, val)
+        }
       }
     },
     data () {
       return {
+        isHistorys: false,
+        isLoading: false,
         items: [],
         results: [],
         value: '',
         tipInfo: '加载中...',
-        url: 'static/img/cheft.png'
+        url: 'static/img/1.png'
       }
     }
+  }
+  function searchInfo (_this, _val) {
+    let params = {
+      keyword: _val,
+      mobile: phoneNumber
+    }
+    _this.$http({
+      url: urlAddress,
+      method: 'POST',
+      params: params,
+      beforeSend: function () {
+        _this.isLoading = true
+      }
+    }).then(function (response) {
+      if (response.data.code === 1000) {
+        _this.isLoading = false
+        _this.results = response.data.data.items
+        let historys = window.localStorage.getItem('historys')
+        historys = response.data.data.items.concat(historys)
+        window.localStorage.setItem('historys', historys)
+      } else {
+        _this.isLoading = false
+        _this.tipInfo = response.data.msg
+      }
+    }, function (response) {
+      _this.isLoading = false
+      _this.tipInfo = response.statusText
+    })
   }
 </script>
 
@@ -96,19 +122,22 @@
     border-radius: 50%;
   }
   
-  .flex60 {
-    -webkit-box-flex: 0 0 60px;
-    -o-box-flex: 0 0 60px;
-    -ms-flex: 0 0 60px;
-    -webkit-flex: 0 0 60px;
-    flex: 0 0 60px;
-  }
-  
   .flex20 {
     -webkit-box-flex: 0 0 20px;
     -o-box-flex: 0 0 20px;
     -ms-flex: 0 0 20px;
     -webkit-flex: 0 0 20px;
     flex: 0 0 20px;
+  }
+  
+  .history-body {
+    padding: 0 10px;
+    background: #f8f8f8;
+  }
+  .history-body p {
+    padding: 5px 0;
+    font-size: 14px;
+    color: #999;
+    line-height: 1.5;
   }
 </style>

@@ -93,7 +93,7 @@
   let pageIndex = 1
   let pageCount = 10
   export default {
-    ready: function () {
+    ready () {
       let params = {
         id: this.$route.params.id,
         type: 'NOTICE'

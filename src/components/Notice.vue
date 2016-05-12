@@ -104,7 +104,6 @@
       })
     },
     components: {
-      Config,
       Search,
       Scroller,
       Spinner,

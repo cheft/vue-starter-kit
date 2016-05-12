@@ -86,7 +86,7 @@
     text-align: center;
     padding-top: 30px;
     color: #fff;
-    font-size: 17px;
+    font-size: 16px;
   }
   
   .center img {
@@ -99,6 +99,7 @@
   .cell-info {
     border-top: 1px solid #ececec;
     border-bottom: 1px solid #ececec;
+    overflow: hidden;
   }
   
   .weui_tabbar_item {
