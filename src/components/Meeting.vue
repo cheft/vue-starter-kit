@@ -100,7 +100,9 @@
         <span slot="label">{{d.date}}</span>
       </tabbar-item>
     </tabbar>
+    <confirm :show.sync="confirmShow" :title="confirmTitle" cancel-text="取消" confirm-text="确定"><p style="text-align:center;"></p></confirm>
   </div>
+
 </template>
 
 <script>
@@ -112,10 +114,13 @@
   import FlexboxItem from 'vux/components/flexbox-item'
   import Tabbar from 'vux/components/tabbar'
   import TabbarItem from 'vux/components/tabbar-item'
+  import Confirm from 'vux/components/confirm'
+
   import config from '../config'
 
   let getMeetingUrl = config.apiPrefix + 'meeting/meetingList'
   let getReserveList = config.apiPrefix + 'meeting/reserveList'
+  let reserveUrl = config.apiPrefix + 'meeting/add'
 
   let reserveList = [
     {
@@ -153,7 +158,8 @@
       Flexbox,
       FlexboxItem,
       Tabbar,
-      TabbarItem
+      TabbarItem,
+      Confirm
     },
 
     ready () {
@@ -167,7 +173,6 @@
     },
 
     methods: {
-
       dateAdder: function (date, increment) {
         date.setDate(date.getDate() + increment)
       },
@@ -253,8 +258,18 @@
       },
 
       reserve: function () {
-        console.log(this.$router.go)
-        this.$router.go('meet-details/123')
+        this.confirmShow = true
+        this.confirmTitle = '你将预定5月12号(周四)9-10点的6楼大会议室，确定吗?'
+        console.log(reserveUrl)
+        // this.$http({url: reserveUrl, method: 'POST',
+        //   data: {storey: 6, date: date}})
+        // .then(function (response) {
+        //   console.log(response)
+        //   this.$set('reserveList', reserveList)
+        // }, function (response) {
+        //   console.log(response)
+        // })
+        // this.$router.go('meet-details/123')
       }
     },
 
@@ -271,7 +286,9 @@
         test: [],
         meetings: [],
         meetingsLen: 13,
-        reserveList: []
+        reserveList: [],
+        confirmShow: false,
+        confirmTitle: ''
         // width: $(window).width() - 20,
         // totalWidth: $(window).width() * 14 - 20
       }
