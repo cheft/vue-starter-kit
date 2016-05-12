@@ -61,7 +61,6 @@
       })
     },
     components: {
-      Config,
       Blur,
       Group,
       Cell,

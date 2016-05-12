@@ -145,7 +145,6 @@
       })
     },
     components: {
-      Config,
       Flexbox,
       FlexboxItem,
       Icon,
