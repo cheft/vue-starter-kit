@@ -46,6 +46,16 @@ router.map({
       require(['./components/Meeting'], resolve)
     }
   },
+  '/my-meetings': {
+    component: function (resolve) {
+      require(['./components/MyMeetings'], resolve)
+    }
+  },
+  '/reserved-meets': {
+    component: function (resolve) {
+      require(['./components/ReservedMeets'], resolve)
+    }
+  },
   '/contacts': {
     component: function (resolve) {
       require(['./components/Contacts'], resolve)
@@ -54,6 +64,11 @@ router.map({
   '/contacts-details/:id': {
     component: function (resolve) {
       require(['./components/ContactsDetails'], resolve)
+    }
+  },
+  '/meet-details/:id': {
+    component: function (resolve) {
+      require(['./components/MeetDetails'], resolve)
     }
   }
 })

@@ -11,37 +11,38 @@
           公告</div>
         </a>
       </flexbox-item>
+      <flexbox-item class="ui-border-r"><a class="item item5" v-link="{path: '/dispatch'}">
+          <div class="img huoguo"></div>
+          <div class="text">
+          发文</div>
+        </a>
+      </flexbox-item>
+      <flexbox-item><a class="item item4" v-link="{path: '/contacts'}">
+          <div class="img yule"></div>
+          <div class="text">
+          通讯录</div>
+        </a>
+      </flexbox-item>
       <flexbox-item class="ui-border-r"><a class="item item2" v-link="{path: '/flow'}">
           <div class="img dianying"></div>
           <div class="text">
           流程</div>
         </a></flexbox-item>
-      <flexbox-item class="ui-border-r"><a class="item item3" v-link="{path: '/meeting'}">
-          <div class="img jiudian"></div>
-          <div class="text">
-          会议</div>
-        </a></flexbox-item>
-      <flexbox-item><a class="item item4" v-link="{path: '/contacts'}">
-          <div class="img yule"></div>
-          <div class="text">
-          通讯录</div>
-        </a></flexbox-item>
     </flexbox>
     <flexbox class="ui-border-b" :margin-left=0>
-      <flexbox-item class="ui-border-r"><a class="item item5" v-link="{path: '/dispatch'}">
-          <div class="img huoguo"></div>
-          <div class="text">
-          发文</div>
-        </a></flexbox-item>
-       <flexbox-item class="ui-border-r"><a class="item item6" v-link="{path: '/setting'}">
+      <flexbox-item class="ui-border-r">
+        <a class="item item3" v-link="{path: '/meeting'}">
+          <div class="img jiudian"></div>
+          <div class="text">预定会议室</div>
+        </a>
+      </flexbox-item>
+       <flexbox-item class="ui-border-r"><a class="item item6" v-link="{path: '/reserved-meets'}">
           <div class="img lvyou"></div>
-          <div class="text">
-          设置</div>
+          <div class="text">已预定会议室</div>
         </a></flexbox-item>
-      <flexbox-item class="ui-border-r"><a class="item item7" v-link="{path: '/setting'}">
+      <flexbox-item class="ui-border-r"><a class="item item7" v-link="{path: '/my-meetings'}">
           <div class="img daijinquan"></div>
-          <div class="text">
-          设置</div>
+          <div class="text">待开会议</div>
         </a></flexbox-item>
       <flexbox-item><a class="item item8" v-link="{path: '/setting'}">
           <div class="img ktv"></div>

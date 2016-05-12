@@ -3,11 +3,11 @@
     <div style="padding: 10px;">
       <swiper :height="height" v-ref:meetings :list="test">
         <swiper-item class="swiper-item" v-for="m in meetings">
-          <div class="title fadeInUp animated">{{m.name}} (限 {{m.number}} 人)</div>
+          <div class="title fadeInUp animated">{{m.storey}}楼 {{m.name}} (限 {{m.number}} 人)</div>
           <flexbox>
             <flexbox-item>
               <div class="time-item">
-                <div class="item-footer">9 - 10 点</div>
+                <div class="item-header">9 - 10 点</div>
                 <div class="item-body">
                   <i class="iconfont icon-yuding"></i>
                   <div>请选择</div>
@@ -16,13 +16,13 @@
             </flexbox-item>
             <flexbox-item v-on:click="call">
               <div class="time-item time-item-reserved">
-                <div class="item-footer">10 - 11 点</div>
+                <div class="item-header">10 - 11 点</div>
                 <div class="item-body">技术中心-陈某某-技术会</div>
               </div>
             </flexbox-item>
             <flexbox-item>
               <div class="time-item">
-                <div class="item-footer">11 - 12 点</div>
+                <div class="item-header">11 - 12 点</div>
                 <div class="item-body">
                   <i class="iconfont icon-yuding"></i>
                   <div>请选择</div>
@@ -32,11 +32,11 @@
           </flexbox>
           <div class="split-text"><i class="iconfont icon-arrowtopo"></i> 上午</div>
           <hr class="split-hr">
-          <div class="split-text"><i class="iconfont icon-arrowdowno"></i> 下午</div>
+          <div class="split-text" style="margin-bottom: 0;"><i class="iconfont icon-arrowdowno"></i> 下午</div>
           <flexbox>
             <flexbox-item>
-              <div class="time-item">
-                <div class="item-footer">14 - 15 点</div>
+              <div class="time-item" v-on:click="selectMeet">
+                <div class="item-header">14 - 15 点</div>
                 <div class="item-body">
                   <i class="iconfont icon-yuding"></i>
                   <div>请选择</div>
@@ -45,7 +45,7 @@
             </flexbox-item>
             <flexbox-item>
               <div class="time-item">
-                <div class="item-footer">15 - 16 点</div>
+                <div class="item-header">15 - 16 点</div>
                 <div class="item-body">
                   <i class="iconfont icon-yuding"></i>
                   <div>请选择</div>
@@ -54,7 +54,7 @@
             </flexbox-item>
             <flexbox-item>
               <div class="time-item">
-                <div class="item-footer">16 - 17 点</div>
+                <div class="item-header">16 - 17 点</div>
                 <div class="item-body">
                   <i class="iconfont icon-yuding"></i>
                   <div>请选择</div>
@@ -65,7 +65,7 @@
           <flexbox>
             <flexbox-item>
               <div class="time-item">
-                <div class="item-footer">17 - 18 点</div>
+                <div class="item-header">17 - 18 点</div>
                 <div class="item-body">
                   <i class="iconfont icon-yuding"></i>
                   <div>请选择</div>
@@ -74,7 +74,7 @@
             </flexbox-item>
             <flexbox-item>
               <div class="time-item">
-                <div class="item-footer">18 - 19 点</div>
+                <div class="item-header">18 - 19 点</div>
                 <div class="item-body">
                   <i class="iconfont icon-yuding"></i>
                   <div>请选择</div>
@@ -83,7 +83,7 @@
             </flexbox-item>
             <flexbox-item>
               <div class="time-item time-item-reserved">
-                <div class="item-footer">19 - 20 点</div>
+                <div class="item-header">19 - 20 点</div>
                 <div class="item-body">技术中心-陈某某-技术会</div>
               </div>
             </flexbox-item>
@@ -92,27 +92,19 @@
       </swiper>
     </div>
 
-    <range v-ref:range slot="value" :value.sync="curMeeting" :min="0" :max="meetingsLen" min-HTML="<span style='font-size:12px;'>6楼</span>" max-HTML="<span style='font-size:12px;'>10楼</span>"></range>
-    <tabbar>
-      <tabbar-item selected>
-        <span slot="icon">周二</span>
-        <span slot="label">05月10号</span>
-      </tabbar-item>
-      <tabbar-item>
-        <span slot="icon">周三</span>
-        <span slot="label">05月11号</span>
-      </tabbar-item>
-      <tabbar-item>
-        <span slot="icon">周四</span>
-        <span slot="label">05月12号</span>
+    <!-- <range v-ref:range slot="value" :value.sync="curMeeting" :min="0" :max="meetingsLen" min-HTML="<span style='font-size:12px;'>6楼</span>" max-HTML="<span style='font-size:12px;'>9楼</span>"></range> -->
+    <div style="margin: 10px;"><x-button type="primary" v-on:click="reserve">选择进行预定</x-button></div>
+    <tabbar v-ref:tabbar>
+      <tabbar-item v-for="d in days" :selected="$index == 0" :data-index="$index" v-on:click="tabClick(d)">
+        <span slot="icon">{{d.week}}</span>
+        <span slot="label">{{d.date}}</span>
       </tabbar-item>
     </tabbar>
   </div>
 </template>
 
 <script>
-  import ColorPicker from 'vux/components/color-picker'
-  import Scroller from 'vux/components/scroller'
+  import XButton from 'vux/components/x-button'
   import Swiper from 'vux/components/swiper'
   import SwiperItem from 'vux/components/swiper-item'
   import Range from 'vux/components/range'
@@ -154,8 +146,7 @@
 
   export default {
     components: {
-      ColorPicker,
-      Scroller,
+      XButton,
       Swiper,
       SwiperItem,
       Range,
@@ -165,19 +156,9 @@
       TabbarItem
     },
 
-    calc () {
-      var weeks = [[], ['一', '二', '三'], ['二', '三', '四'], ['三', '四', '五'], ['四', '五', '一'], ['五', '一', '二']]
-
-      var date = new Date()
-      var day = date.getDay()
-      if (day === 0 || day === 6 || day === 7) {
-        day = 1
-      }
-      var days = weeks[day]
-      console.log(days, 2222)
-    },
-
     ready () {
+      document.title = '预订会议室'
+      this.calc()
       this.fetchMeetings()
       var _this = this
       this.$refs.meetings.$watch('current', function (val) {
@@ -186,19 +167,69 @@
     },
 
     methods: {
+
+      dateAdder: function (date, increment) {
+        date.setDate(date.getDate() + increment)
+      },
+
+      dayBuilder: function (date) {
+        var weekMap = {'1': '周一', '2': '周二', '3': '周三', '4': '周四', '5': '周五'}
+        return {week: weekMap[date.getDay()], date: date.getMonth() + 1 + '月' + date.getDate() + '号',
+          value: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()}
+      },
+
+      calc: function () {
+        var days = []
+        var date = new Date()
+        var day = date.getDay()
+        if (day === 4) {
+          days.push(this.dayBuilder(date))
+          this.dateAdder(date, 1)
+          days.push(this.dayBuilder(date))
+          this.dateAdder(date, 3)
+          days.push(this.dayBuilder(date))
+        } else if (day === 5) {
+          days.push(this.dayBuilder(date))
+          this.dateAdder(date, 3)
+          days.push(this.dayBuilder(date))
+          this.dateAdder(date, 1)
+          days.push(this.dayBuilder(date))
+        } else if (day === 6) {
+          this.dateAdder(date, 3)
+          days.push(this.dayBuilder(date))
+          this.dateAdder(date, 1)
+          days.push(this.dayBuilder(date))
+          this.dateAdder(date, 1)
+          days.push(this.dayBuilder(date))
+        } else if (day === 7) {
+          this.dateAdder(date, 1)
+          days.push(this.dayBuilder(date))
+          this.dateAdder(date, 1)
+          days.push(this.dayBuilder(date))
+          this.dateAdder(date, 1)
+          days.push(this.dayBuilder(date))
+        } else {
+          days.push(this.dayBuilder(date))
+          this.dateAdder(date, 1)
+          days.push(this.dayBuilder(date))
+          this.dateAdder(date, 1)
+          days.push(this.dayBuilder(date))
+        }
+        this.fetchReserveList(days[0].value)
+        this.$set('days', days)
+      },
       fetchMeetings: function () {
         var _this = this
         this.$http({url: getMeetingUrl, method: 'POST'}).then(function (response) {
           _this.$set('meetings', response.data.data.items)
-          _this.fetchReserveList()
         }, function (response) {
           console.log(response)
         })
       },
 
-      fetchReserveList: function () {
+      fetchReserveList: function (date) {
         // var _this = this
-        this.$http({url: getReserveList, method: 'POST', params: {storey: 6, date: '2016-05-10'}}).then(function (response) {
+        this.$http({url: getReserveList, method: 'POST', params: {storey: 6, date: date}}).then(function (response) {
           console.log(response)
           this.$set('reserveList', reserveList)
         }, function (response) {
@@ -206,9 +237,24 @@
         })
       },
 
+      tabClick: function (item) {
+        console.log(item)
+        this.fetchReserveList(item.value)
+      },
+
+      selectMeet: function (e) {
+        console.log(e.target.parentNode.classList)
+        e.target.parentNode.classList.add('time-item-selected')
+      },
+
       /* eslint-disable no-undef */
       call: function () {
         location.href = 'tel:13316463314'
+      },
+
+      reserve: function () {
+        console.log(this.$router.go)
+        this.$router.go('meet-details/123')
       }
     },
 
@@ -218,8 +264,10 @@
         rangeView: 'Range',
         color1: '#FFEF7D',
         colors1: ['#FF3B3B', '#FFEF7D', '#8AEEB1'],
-        height: $(window).height() - 120 + '',
+        height: $(window).height() - 165 + '',
         curMeeting: 0,
+        currentTab: 0,
+        days: [],
         test: [],
         meetings: [],
         meetingsLen: 13,
@@ -238,9 +286,19 @@
   }
 </script>
 <style>
+.x-header-right .weui_btn {
+  font-size: 14px;
+}
+
+.x-header .x-header-right {
+  top: 7px;
+  right: 7px;
+}
+
 .title {
-  height: 60px;
-  line-height: 60px;
+  font-size: 18px;
+  height: 40px;
+  line-height: 40px;
   font-weight: 700;
 }
 
@@ -273,13 +331,12 @@
 .time-item {
   height: 120px;
   line-height: 120px;
-  background: #4CAF50;
+  background: #9e9e9e;
   text-align: center;
   color: #fff;
   border: 1px solid #fff;
   border-radius: 3px;
   margin-top: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
 .item-body {
@@ -299,22 +356,31 @@
   font-size: 14px;
 }
 
-.item-footer {
+.item-header {
   height: 40px;
-  background-color: #388E3C;
-  border-bottom-left-radius: 3px;
-  border-bottom-right-radius: 3px;
+  background-color: #616161;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
   font-size: 16px;
   font-weight: 700;
   line-height: 40px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
-.time-item-reserved .item-footer {
+.time-item-reserved .item-header {
   background-color: #F57C00;
 }
 
 .time-item-reserved {
   background: #FF9800;
+}
+
+.time-item-selected .item-header {
+  background-color: #388E3C;
+}
+
+.time-item-selected {
+  background: #4CAF50;
 }
 
 .split-text {
@@ -326,12 +392,17 @@
 
 .split-hr {
   margin: 15px 0;
-  border: 1px dotted #DA9F5F;
+  border: 1px dotted #616161;
+}
+
+.weui_tabbar_item {
+  font-weight: 700;
 }
 
 .weui_tabbar_item .weui_tabbar_icon {
   color: #888;
   height: inherit;
+  width: inherit;
 }
 
 .weui_tabbar_item.weui_bar_item_on {
@@ -349,20 +420,6 @@
 
 .range-max, .range-min {
   width: 30px;
-}
-
-.range-handle {
-  width: 20px;
-  height: 20px;
-  margin-top: 5px;
-}
-
-.range-quantity {
-  background-color: #DA9F5F;
-}
-
-.range-bar {
-  background-color: #04be02;
 }
 
 .range-max, .range-min {
