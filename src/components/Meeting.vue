@@ -6,7 +6,7 @@
           <div class="title fadeInUp animated">{{m.storey}}楼 {{m.name}} (限 {{m.number}} 人)</div>
           <flexbox>
             <flexbox-item>
-              <div class="time-item">
+              <div class="time-item" id="{{m.id}}_9-10">
                 <div class="item-header">9 - 10 点</div>
                 <div class="item-body">
                   <i class="iconfont icon-yuding"></i>
@@ -14,14 +14,17 @@
                 </div>
               </div>
             </flexbox-item>
-            <flexbox-item v-on:click="call">
-              <div class="time-item time-item-reserved">
+            <flexbox-item>
+              <div class="time-item" id="{{m.id}}_10-11">
                 <div class="item-header">10 - 11 点</div>
-                <div class="item-body">技术中心-陈某某-技术会</div>
+                <div class="item-body">
+                  <i class="iconfont icon-yuding"></i>
+                  <div>请选择</div>
+                </div>
               </div>
             </flexbox-item>
             <flexbox-item>
-              <div class="time-item">
+              <div class="time-item" id="{{m.id}}_11-12">
                 <div class="item-header">11 - 12 点</div>
                 <div class="item-body">
                   <i class="iconfont icon-yuding"></i>
@@ -35,7 +38,7 @@
           <div class="split-text" style="margin-bottom: 0;"><i class="iconfont icon-arrowdowno"></i> 下午</div>
           <flexbox>
             <flexbox-item>
-              <div class="time-item" v-on:click="selectMeet">
+              <div class="time-item" id="{{m.id}}_14-15">
                 <div class="item-header">14 - 15 点</div>
                 <div class="item-body">
                   <i class="iconfont icon-yuding"></i>
@@ -44,7 +47,7 @@
               </div>
             </flexbox-item>
             <flexbox-item>
-              <div class="time-item">
+              <div class="time-item" id="{{m.id}}_15-16">
                 <div class="item-header">15 - 16 点</div>
                 <div class="item-body">
                   <i class="iconfont icon-yuding"></i>
@@ -53,7 +56,7 @@
               </div>
             </flexbox-item>
             <flexbox-item>
-              <div class="time-item">
+              <div class="time-item" id="{{m.id}}_16-17">
                 <div class="item-header">16 - 17 点</div>
                 <div class="item-body">
                   <i class="iconfont icon-yuding"></i>
@@ -64,7 +67,7 @@
           </flexbox>
           <flexbox>
             <flexbox-item>
-              <div class="time-item">
+              <div class="time-item" id="{{m.id}}_17-18">
                 <div class="item-header">17 - 18 点</div>
                 <div class="item-body">
                   <i class="iconfont icon-yuding"></i>
@@ -73,7 +76,7 @@
               </div>
             </flexbox-item>
             <flexbox-item>
-              <div class="time-item">
+              <div class="time-item" id="{{m.id}}_18-19">
                 <div class="item-header">18 - 19 点</div>
                 <div class="item-body">
                   <i class="iconfont icon-yuding"></i>
@@ -82,7 +85,7 @@
               </div>
             </flexbox-item>
             <flexbox-item>
-              <div class="time-item time-item-reserved">
+              <div class="time-item time-item-reserved" id="{{m.id}}_19-20">
                 <div class="item-header">19 - 20 点</div>
                 <div class="item-body">技术中心-陈某某-技术会</div>
               </div>
@@ -92,8 +95,8 @@
       </swiper>
     </div>
 
-    <!-- <range v-ref:range slot="value" :value.sync="curMeeting" :min="0" :max="meetingsLen" min-HTML="<span style='font-size:12px;'>6楼</span>" max-HTML="<span style='font-size:12px;'>9楼</span>"></range> -->
-    <div style="margin: 10px;"><x-button type="primary" v-on:click="reserve">选择进行预定</x-button></div>
+    <range v-ref:range slot="value" :value.sync="curMeeting" :min="0" :max="meetingsLen" min-HTML="<span style='font-size:12px;'>6楼</span>" max-HTML="<span style='font-size:12px;'>9楼</span>"></range>
+    <div style="margin: 10px;display:none;" id="submitDiv"><x-button type="primary">选择进行预定</x-button></div>
     <tabbar v-ref:tabbar>
       <tabbar-item v-for="d in days" :selected="$index == 0" :data-index="$index" v-on:click="tabClick(d)">
         <span slot="icon">{{d.week}}</span>
@@ -101,6 +104,8 @@
       </tabbar-item>
     </tabbar>
     <confirm :show.sync="confirmShow" :title="confirmTitle" cancel-text="取消" confirm-text="确定"><p style="text-align:center;"></p></confirm>
+    <toast :show.sync="toastShow" :time=2000 type="cancel">{{toastTitle}}</toast>
+    <loading :show="loadingShow" text="加载中..."></loading>
   </div>
 
 </template>
@@ -115,6 +120,8 @@
   import Tabbar from 'vux/components/tabbar'
   import TabbarItem from 'vux/components/tabbar-item'
   import Confirm from 'vux/components/confirm'
+  import Toast from 'vux/components/toast'
+  import Loading from 'vux/components/loading'
 
   import config from '../config'
 
@@ -159,7 +166,9 @@
       FlexboxItem,
       Tabbar,
       TabbarItem,
-      Confirm
+      Confirm,
+      Toast,
+      Loading
     },
 
     ready () {
@@ -169,7 +178,10 @@
       var _this = this
       this.$refs.meetings.$watch('current', function (val) {
         _this.$set('curMeeting', val)
+        _this.hideSubmitBtn()
+        _this.clearSelectedFill()
       })
+      this.bindItemEvent()
     },
 
     methods: {
@@ -179,8 +191,10 @@
 
       dayBuilder: function (date) {
         var weekMap = {'1': '周一', '2': '周二', '3': '周三', '4': '周四', '5': '周五'}
+        var month = date.getMonth() + 1
+        if ((month + '').length === 1) month = '0' + month
         return {week: weekMap[date.getDay()], date: date.getMonth() + 1 + '月' + date.getDate() + '号',
-          value: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()}
+          value: date.getFullYear() + '-' + month + '-' + date.getDate()}
       },
 
       calc: function () {
@@ -224,21 +238,58 @@
         this.$set('days', days)
       },
       fetchMeetings: function () {
+        this.loadingShow = true
         var _this = this
         this.$http({url: getMeetingUrl, method: 'POST'}).then(function (response) {
           _this.$set('meetings', response.data.data.items)
+          this.loadingShow = false
         }, function (response) {
           console.log(response)
+          this.loadingShow = false
+          this.toastTitle = '系统错误'
         })
       },
 
+      /* eslint-disable no-undef */
+      clearReservedFill: function () {
+        $('.time-item').removeClass('time-item-reserved')
+        $('.item-body').html('<i class="iconfont icon-yuding"></i><div>请选择</div>')
+      },
+
+      /* eslint-disable no-undef */
+      clearSelectedFill: function () {
+        $('.time-item').removeClass('time-item-selected')
+      },
+
+      /* eslint-disable no-undef */
+      fillReserveMeet: function (item, date) {
+        var $el = $('#' + item.conferenceId + '_' + date)
+        $el.addClass('time-item-reserved')
+        $el.find('.item-body').html(item.title)
+      },
+
       fetchReserveList: function (date) {
-        // var _this = this
+        this.loadingShow = true
+        this.clearReservedFill()
+        this.clearSelectedFill()
+        this.hideSubmitBtn()
+        var _this = this
         this.$http({url: getReserveList, method: 'POST', params: {storey: 6, date: date}}).then(function (response) {
-          console.log(response)
-          this.$set('reserveList', reserveList)
+          var list = response.data.data.items
+          list.forEach(function (item) {
+            var dates = item.dates
+            var ds = dates.split(',')
+            ds.forEach(function (d) {
+              _this.fillReserveMeet(item, d)
+            })
+          })
+          console.log(110)
+          this.loadingShow = false
         }, function (response) {
           console.log(response)
+          this.loadingShow = false
+          this.toastShow = true
+          this.toastTitle = '系统错误'
         })
       },
 
@@ -260,25 +311,49 @@
       reserve: function () {
         this.confirmShow = true
         this.confirmTitle = '你将预定5月12号(周四)9-10点的6楼大会议室，确定吗?'
+
+        this.toastShow = true
+        this.toastTitle = '已被抢先预定'
+
         console.log(reserveUrl)
-        // this.$http({url: reserveUrl, method: 'POST',
-        //   data: {storey: 6, date: date}})
-        // .then(function (response) {
-        //   console.log(response)
-        //   this.$set('reserveList', reserveList)
-        // }, function (response) {
-        //   console.log(response)
-        // })
-        // this.$router.go('meet-details/123')
+        this.$http({url: reserveUrl, method: 'POST',
+          data: {storey: 6, date: date}})
+        .then(function (response) {
+          console.log(response)
+          this.$set('reserveList', reserveList)
+        }, function (response) {
+          console.log(response)
+        })
+        this.$router.go('meet-details/123')
+      },
+      /* eslint-disable no-undef */
+      showSubmitBtn: function () {
+        $('.vux-range-input-box').hide()
+        $('#submitDiv').show()
+      },
+      hideSubmitBtn: function () {
+        $('.vux-range-input-box').show()
+        $('#submitDiv').hide()
+      },
+      /* eslint-disable no-undef */
+      bindItemEvent: function () {
+        var _this = this
+        $(document).on('click', '.time-item', function (e) {
+          var $el = $(e.currentTarget)
+          if ($el.hasClass('time-item-reserved')) {
+            location.href = 'tel:13316463314'
+          } else if ($el.hasClass('time-item-selected')) {
+            $el.removeClass('time-item-selected')
+          } else {
+            $el.addClass('time-item-selected')
+            _this.showSubmitBtn()
+          }
+        })
       }
     },
-
     /* eslint-disable no-undef */
     data () {
       return {
-        rangeView: 'Range',
-        color1: '#FFEF7D',
-        colors1: ['#FF3B3B', '#FFEF7D', '#8AEEB1'],
         height: $(window).height() - 165 + '',
         curMeeting: 0,
         currentTab: 0,
@@ -288,7 +363,10 @@
         meetingsLen: 13,
         reserveList: [],
         confirmShow: false,
-        confirmTitle: ''
+        confirmTitle: '',
+        toastShow: false,
+        toastTitle: '',
+        loadingShow: false
         // width: $(window).width() - 20,
         // totalWidth: $(window).width() * 14 - 20
       }
@@ -348,7 +426,7 @@
 .time-item {
   height: 120px;
   line-height: 120px;
-  background: #9e9e9e;
+  background: #607d8b;
   text-align: center;
   color: #fff;
   border: 1px solid #fff;
@@ -375,7 +453,7 @@
 
 .item-header {
   height: 40px;
-  background-color: #616161;
+  background-color: #455a64;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
   font-size: 16px;
