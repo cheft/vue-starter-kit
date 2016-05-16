@@ -1,33 +1,21 @@
 <template>
   <div class="page-body">
-    <search @on-change="getResult" :results="results" :value.sync="value" class="search-body" placeholder="输入关键词" cancel-text="取消"></search>
+    <search @on-change="getResult" @list-click="itemClick" :results="results" :value.sync="value" class="search-body" placeholder="输入关键词" cancel-text="取消"></search>
     <div v-if="isHistorys" class="personal-list">
       <div class="history-body">
-        <flexbox :gutter="0">
-          <flexbox-item>
-            <p>历史搜索记录</p>
-          </flexbox-item>
-          <flexbox-item>
-            <p style="text-align: right;">共{{ items.length }}条记录</p>
-          </flexbox-item>
-        </flexbox>
+        <div class="box-middel">
+          <p class="flex">历史搜索记录</p>
+          <p>共{{ items.length }}条记录</p>
+        </div>
       </div>
       <div v-for="item in items" class="group-body" v-link="'contacts-details/' + item.id">
-        <flexbox :gutter="0" class="flex-box">
-          <flexbox-item>
-            <flexbox :gutter="0" orient="vertical">
-              <flexbox-item>
-                <p class="title">{{ item.personName }}</p>
-              </flexbox-item>
-              <flexbox-item>
-                <p class="title">{{ item.orgName + '-' + item.positionType }}</p>
-              </flexbox-item>
-            </flexbox>
-          </flexbox-item>
-          <flexbox-item class="flex20">
-            <i class="arrow"></i>
-          </flexbox-item>
-        </flexbox>
+        <div class="box-middel flex-box">
+          <div class="box-vertical flex">
+            <p class="title flex">{{ item.personName }}</p>
+            <p class="title flex">{{ item.orgName + '-' + item.positionType }}</p>
+          </div>
+          <div class="arrow-body"><i class="arrow"></i></div>      
+        </div>
       </div>
     </div>
   </div>
@@ -36,31 +24,33 @@
 <script>
   import Config from '../config'
   import Search from './MySearch'
-  import Flexbox from 'vux/components/flexbox'
-  import FlexboxItem from 'vux/components/flexbox-item/'
   import Spinner from 'vux/components/spinner/'
   import Icon from 'vux/components/icon/'
   let urlAddress = Config.apiPrefix + 'contactsList'
   let phoneNumber = '18617166210'
+  let hisLength = 5
   export default {
     ready () {
-      let s = '黄亮'
-      window.localStorage.setItem('historys', s)
+      // window.localStorage.clear()
       let historys = window.localStorage.getItem('historys')
-      console.log(historys)
+      if (historys !== null) {
+        this.isHistorys = true
+        this.items = JSON.parse(historys)
+      }
     },
     components: {
       Search,
-      Flexbox,
-      FlexboxItem,
       Spinner,
       Icon
     },
     methods: {
       getResult: function (val) {
-        if (val !== '') {
-          searchInfo(this, val)
+        if (val.replace(/(^\s*)|(\s*$)/g, '') !== '') {
+          searchInfo(this, val.replace(/(^\s*)|(\s*$)/g, ''))
         }
+      },
+      itemClick: function (item) {
+        setHistorys(item)
       }
     },
     data () {
@@ -91,9 +81,6 @@
       if (response.data.code === 1000) {
         _this.isLoading = false
         _this.results = response.data.data.items
-        let historys = window.localStorage.getItem('historys')
-        historys = response.data.data.items.concat(historys)
-        window.localStorage.setItem('historys', historys)
       } else {
         _this.isLoading = false
         _this.tipInfo = response.data.msg
@@ -103,33 +90,42 @@
       _this.tipInfo = response.statusText
     })
   }
+  function setHistorys (item) {
+    if (item) {
+      let historys = window.localStorage.getItem('historys')
+      let arr = []
+      if (historys !== null) {
+        arr = JSON.parse(historys)
+      }
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].id === item.id) {
+          arr.splice(i, 1)
+          break
+        }
+      }
+      if (arr.length === hisLength) {
+        arr.pop()
+      }
+      arr.unshift({
+        id: item.id,
+        orgName: item.orgName,
+        positionType: item.positionType,
+        personName: item.personName
+      })
+      historys = JSON.stringify(arr)
+      window.localStorage.setItem('historys', historys)
+    }
+  }
 </script>
 
 <style scoped>
   @import '../../static/css/public.css';
-  .head-portrait {
-    width: 48px;
-    height: 48px;
-    border: 2px solid #ececec;
-    border-radius: 50%;
-    box-sizing: border-box;
+  .title {
+    font-size: 14px;
+    color: #333;
+    line-height: 1.5;
   }
-  
-  .head-portrait img {
-    display: block;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-  }
-  
-  .flex20 {
-    -webkit-box-flex: 0 0 20px;
-    -o-box-flex: 0 0 20px;
-    -ms-flex: 0 0 20px;
-    -webkit-flex: 0 0 20px;
-    flex: 0 0 20px;
-  }
-  
+ 
   .history-body {
     padding: 0 10px;
     background: #f8f8f8;

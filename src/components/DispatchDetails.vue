@@ -9,15 +9,10 @@
       </div>
       <article v-else class="article-body">
         <h1 class="title">{{ items.title }}</h1>
-        <flexbox :gutter="0" class="flex-box-ver">
-          <flexbox-item>
-            <span class="info">{{ items.head }}</span>
-          </flexbox-item>
-          <flexbox-item :span="4" style="text-align:right;">
-            <label class="info">签发人:</label>
-            <time class="info">{{ items.personName }}</time>
-          </flexbox-item>
-        </flexbox>
+        <div class="box-middel flex-box-ver">
+          <p class="info flex">{{ items.head }}</p>
+          <p class="info">签发人：{{ items.personName }}</p>
+        </div>
         <section class="section-body">
             {{{ items.content }}}
         </section>
@@ -31,8 +26,6 @@
 
 <script>
   import Config from '../config'
-  import Flexbox from 'vux/components/flexbox/'
-  import FlexboxItem from 'vux/components/flexbox-item/'
   import Icon from 'vux/components/icon/'
   import Spinner from 'vux/components/spinner/'
   export default {
@@ -62,8 +55,6 @@
       })
     },
     components: {
-      Flexbox,
-      FlexboxItem,
       Icon,
       Spinner
     },
@@ -82,14 +73,14 @@
   @import '../../static/css/public.css';
   .title {
     font-size: 16px;
-    color: #333;
+    color: #f43530;
     line-height: 1.5;
     text-align: center;
   }
   
   .info {
     font-size: 13px;
-    color: #666;
+    color: #f77c79;
     line-height: 1.5;
   }
   
@@ -100,7 +91,12 @@
   
   .time-body time {
     font-size: 13px;
-    color: #666;
+    color: #f77c79;
     line-height: 1.5;
+  }
+  
+  .section-body {
+    border-top: 1px solid #f43530;
+    border-bottom: 1px solid #f77c79;
   }
 </style>

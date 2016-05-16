@@ -8,7 +8,7 @@
         <p class="none-data"><icon type="warn"></icon><span>{{ tipInfo }}</span></p>
       </div>
       <div v-else class="personal-info">
-        <blur :blur-amount=30 :url="url">
+        <blur :blur-amount=50 :url="url">
           <p class="center">
             <img :src="url">
               <br/>
@@ -16,11 +16,26 @@
           </p>
         </blur>
         <div class="cell-info">
-          <cell title="部门" :value="items.orgName + ' - ' + items.positionType"></cell>
-          <cell title="手机" :value="items.mobile"></cell>
-          <cell title="座机" :value="items.cell"></cell>
-          <cell title="微信" :value="items.wexin"></cell>
-          <cell title="邮箱" :value="items.email"></cell>
+          <div class="box-middel cell">
+            <p class="label">部门</p>
+            <p class="content flex">{{ items.orgName + ' - ' + items.positionType }}</p>
+          </div>
+          <div class="box-middel cell">
+            <p class="label">手机</p>
+            <p class="content flex"><a :href="'tel:' + items.mobile">{{ items.mobile }}</a></p>
+          </div>
+          <div class="box-middel cell">
+            <p class="label">座机</p>
+            <p class="content flex"><a :href="'tel:' + items.cell">{{ items.cell }}</a></p>
+          </div>
+          <div class="box-middel cell">
+            <p class="label">微信</p>
+            <p class="content flex">{{ items.wexin }}</p>
+          </div>
+          <div class="box-middel cell">
+            <p class="label">邮箱</p>
+            <p class="content flex">{{ items.email }}</p>
+          </div>
         </div>
       </div>
     </template>
@@ -30,8 +45,6 @@
 <script>
   import Config from '../config'
   import Blur from 'vux/components/blur'
-  import Group from 'vux/components/group'
-  import Cell from 'vux/components/cell'
   import Spinner from 'vux/components/spinner/'
   import Icon from 'vux/components/icon/'
   let urlAddress = Config.apiPrefix + 'contactsList/toPersonDetail'
@@ -62,8 +75,6 @@
     },
     components: {
       Blur,
-      Group,
-      Cell,
       Spinner,
       Icon
     },
@@ -73,7 +84,7 @@
         noneData: true,
         items: {},
         tipInfo: '加载中...',
-        url: 'static/img/cheft.png'
+        url: 'static/img/nnn.jpg'
       }
     }
   }
@@ -101,48 +112,30 @@
     overflow: hidden;
   }
   
-  .weui_tabbar_item {
-    color: #71D571;
-    text-align: center;
-    padding: 10px;
-  }
-  
-  .iconfont label {
+  .cell {
     margin-left: 10px;
+    padding: 10px 10px 10px 0;
+    border-bottom: 1px solid #ececec;
   }
   
-  .icon-search {
-    position: absolute;
-    top: 10px;
-    left: 15px;
-    color: #fff;
-    font-size: 18px;
+  .cell:last-child {
+    border: none;
   }
   
-  .icon-share {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    color: #fff;
-    font-size: 20px;
+  .label {
+    font-size: 14px;
+    color: #999;
+    line-height: 1.5;
   }
   
-  @media (max-height: 480px) {
-    .center {
-      padding-top: 20px;
-    }
-    .center img {
-      width: 80px;
-      height: 80px;
-    }
-    .bg_div {
-      height: 150px !important;
-    }
-    .no_group_title {
-      margin-top: 0;
-    }
-    .weui_cells {
-      font-size: 15px;
-    }
+  .content {
+    font-size: 14px;
+    color: #333;
+    line-height: 1.5;
+    text-align: right;
+  }
+  
+  .content a {
+    color: #f60;
   }
 </style>

@@ -1,3 +1,37 @@
+.box,
+.box-align,
+.box-middel,
+.box-vertical {
+  display: -webkit-box;
+  display: -moz-box;
+  display: box;
+}
+
+.box-vertical {
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  box-orient: vertical;
+}
+
+.box-align,
+.box-middel {
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  box-align: center;
+}
+
+.box-align {
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  box-pack: center;
+}
+
+.flex {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  box-flex: 1;
+}
+
 .loading-body {
   padding-top: 50px;
 }
@@ -28,6 +62,7 @@
 
 .list-body {
   background-color: #f8f8f8;
+  overflow: hidden;
 }
 
 .search-body {
@@ -60,6 +95,10 @@
 .flex-box-ver {
   padding: 10px 0;
   box-sizing: border-box;
+}
+
+.arrow-body {
+  padding: 0 5px 0 10px;
 }
 
 .arrow {
@@ -106,4 +145,22 @@
 .personal-list {
   padding-top: 44px;
   box-sizing: border-box;
+}
+
+.meeting-title {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: auto;
+  left: 0;
+  z-index: 100;
+  background-color: #ff992d;
+}
+
+.meeting-title p {
+  padding: 10px;
+  font-size: 16px;
+  color: #fff;
+  line-height: 1.5;
+  text-align: center;
 }

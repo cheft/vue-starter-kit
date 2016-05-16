@@ -9,55 +9,34 @@
       </div>
       <article v-else class="article-body">
         <h1 class="title">{{ items.title }}</h1>
-        <flexbox :gutter="0" class="flex-box-ver">
-          <flexbox-item :span="4">
-            <label class="info">发布人:</label>
-            <time class="info">{{ items.personName }}</time>
-          </flexbox-item>
-          <flexbox-item style="text-align: center;">
-            <label class="info">发布时间:</label>
-            <span class="info">{{ items.date }}</span>
-          </flexbox-item>
-          <flexbox-item :span="3" style="text-align: right;">
-            <label class="info">阅读:</label>
-            <span class="info">{{ items.clickCount }}</span>
-          </flexbox-item>
-        </flexbox>
+        <div class="box-middel flex-box-ver">
+          <p class="info">发布人：{{ items.personName }}</p>
+          <p class="info flex" style="text-align: center;">发布时间：{{ items.date }}</p>
+          <p class="info">阅读：{{ items.clickCount }}</p>
+        </div>
         <section class="section-body">
             {{{ items.content }}}
         </section>
         <div class="comment-body">
-          <flexbox :gutter="0" class="flex-box-ver">
-            <flexbox-item>
-              <label class="number">评论数:</label>
-              <span class="number">{{ items.commentsCount }}</span>
-            </flexbox-item>
-            <flexbox-item :span="3">
-              <a class="discuss" href="javascript:void(0);" @click="writeComment">我要评论</a>
-            </flexbox-item>
-          </flexbox>
+          <div class="box-middel flex-box-ver">
+            <p class="number flex">评论数:{{ items.commentsCount }}</p>
+            <a class="discuss" href="javascript:void(0);" @click="writeComment">我要评论</a>
+          </div>
           <div v-if="noneComment" class="none-comment">
             <p>暂无评论</p>
           </div>
-          <flexbox v-else v-for="li in list" orient="vertical" class="flex-box-ver list">
-            <flexbox-item>
-              <flexbox :gutter="0">
-                <flexbox-item>
-                  <span class="name">{{ li.orgName }}</span>
-                  <span class="name">{{ li.personName }}：</span>
-                </flexbox-item>
-                <flexbox-item :span="3">
-                  <a class="discuss" href="javascript:void(0);" @click="reply(li.personName)">回复</a>
-                </flexbox-item>
-              </flexbox>
-            </flexbox-item>
-            <flexbox-item>
+          <div v-else v-for="li in list" class="box-vertical flex-box-ver list">
+            <div class="box-middel flex">
+              <p class="name flex">{{ li.orgName + li.personName }}：</p>
+              <a class="discuss" href="javascript:void(0);" @click="reply(li.personName)">回复</a>
+            </div>
+            <div class="flex">
               <p class="content">{{ li.content }}</p>
-            </flexbox-item>
-            <flexbox-item>
+            </div>
+            <div class="flex">
               <time class="time">{{ li.date }}</time>
-            </flexbox-item>
-          </flexbox>
+            </div>
+          </div>
           <div class="more" v-if="more">
             <a href="javascript:void(0);" @click="lookMore">查看更多评论</a>
           </div>
@@ -81,8 +60,6 @@
 <script>
   import Vue from 'vue'
   import Config from '../config'
-  import Flexbox from 'vux/components/flexbox/'
-  import FlexboxItem from 'vux/components/flexbox-item/'
   import Icon from 'vux/components/icon/'
   import Spinner from 'vux/components/spinner/'
   import Popup from 'vux/components/popup/'
@@ -145,8 +122,6 @@
       })
     },
     components: {
-      Flexbox,
-      FlexboxItem,
       Icon,
       Spinner,
       Popup,
@@ -294,6 +269,7 @@
   }
 
   .content {
+    margin: 5px 0;
     font-size: 14px;
     color: #333;
     line-height: 1.5;

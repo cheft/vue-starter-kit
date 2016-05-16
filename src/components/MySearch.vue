@@ -19,30 +19,20 @@
       <div v-if="isLoading" class="loading-body">
         <p class="loading"><spinner type="ios-small"></spinner><span>{{ tipInfo }}</span></p>
       </div>
-      <div v-else v-for="item in results" class="group-body" v-link="'contacts-details/' + item.id">
-        <flexbox :gutter="0" class="flex-box">
-          <flexbox-item>
-            <flexbox :gutter="0" orient="vertical">
-              <flexbox-item>
-                <p class="title">{{ item.personName }}</p>
-              </flexbox-item>
-              <flexbox-item>
-                <p class="title">{{ item.orgName + '-' + item.positionType }}</p>
-              </flexbox-item>
-            </flexbox>
-          </flexbox-item>
-          <flexbox-item class="flex20">
-            <i class="arrow"></i>
-          </flexbox-item>
-        </flexbox>
+      <div v-else v-for="item in results" class="group-body" @click="searchListClick(item)" v-link="'contacts-details/' + item.id">
+        <div class="box-middel flex-box">
+          <div class="box-vertical flex">
+            <p class="title flex">{{ item.personName }}</p>
+            <p class="title flex">{{ item.orgName + '-' + item.positionType }}</p>
+          </div>
+          <div class="arrow-body"><i class="arrow"></i></div>      
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import Flexbox from 'vux/components/flexbox'
-  import FlexboxItem from 'vux/components/flexbox-item/'
   import Spinner from 'vux/components/spinner/'
   export default {
     props: {
@@ -75,8 +65,6 @@
       }
     },
     components: {
-      Flexbox,
-      FlexboxItem,
       Spinner
     },
     methods: {
@@ -98,6 +86,11 @@
       },
       setFocus: function () {
         this.$els.input.focus()
+      },
+      searchListClick: function (item) {
+        this.$dispatch('list-click', item)
+        this.isCancel = true
+        this.isFixed = false
       }
     },
     data () {
@@ -155,11 +148,9 @@
 </style>
 <style scoped>
   @import '../../static/css/public.css';
-  .flex20 {
-    -webkit-box-flex: 0 0 20px;
-    -o-box-flex: 0 0 20px;
-    -ms-flex: 0 0 20px;
-    -webkit-flex: 0 0 20px;
-    flex: 0 0 20px;
+  .title {
+    font-size: 14px;
+    color: #333;
+    line-height: 1.5;
   }
 </style>
