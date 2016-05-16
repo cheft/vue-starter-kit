@@ -24,7 +24,7 @@
           <div v-else v-for="item in results">
             <cell :title="item.orgName + item.name">
               <div slot="value">
-                <x-button type="primary" @click="itemAddClick(item)">增加</x-button>
+                <x-button type="primary" @click="itemAddClick(item, $event)">增加</x-button>
               </div>
             </cell>
           </div>
@@ -101,7 +101,10 @@
       setFocus: function () {
         this.$els.input.focus()
       },
-      itemAddClick: function (item) {
+      /* eslint-disable no-undef */
+      itemAddClick: function (item, e) {
+        console.log(e)
+        $(e.target).removeClass('weui_btn_primary').addClass('weui_btn_default').text('已增加')
         this.$dispatch('item-add-click', item)
       }
     },

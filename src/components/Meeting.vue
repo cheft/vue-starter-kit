@@ -148,6 +148,7 @@
     },
 
     ready () {
+      console.log('111111111预订')
       document.title = '预订会议室'
       this.fetchMeetings()
       var _this = this
@@ -251,8 +252,8 @@
       /* eslint-disable no-undef */
       fillReserveMeet: function (item, date) {
         var $el = $('#' + item.conferenceId + '_' + date)
-        $el.addClass('time-item-reserved')
-        $el.find('.item-body').html(item.title)
+        $el.addClass('time-item-reserved').data('mobile', item.mobile)
+        $el.find('.item-body').html('<div>' + item.orgName + '-' + item.personName + '</div><div>' + (item.title || '会议') + '</div>')
       },
 
       fetchReserveList: function (date) {
@@ -270,7 +271,6 @@
               _this.fillReserveMeet(item, d)
             })
           })
-          console.log(110)
           this.loadingShow = false
         }, function (response) {
           console.log(response)
@@ -284,11 +284,6 @@
         console.log(item.value)
         this.useDate = item.value
         this.fetchReserveList(item.value)
-      },
-
-      /* eslint-disable no-undef */
-      call: function () {
-        location.href = 'tel:13316463314'
       },
 
       confirmReserve: function () {
@@ -343,12 +338,13 @@
       /* eslint-disable no-undef */
       bindItemEvent: function () {
         var _this = this
-        $(document).on('click', '.time-item', function (e) {
+        $(document).off('click.time-item').on('click.time-item', '.time-item', function (e) {
           var $el = $(e.currentTarget)
           var id = $el.attr('id')
           console.log($el.attr('id'))
           if ($el.hasClass('time-item-reserved')) {
-            location.href = 'tel:13316463314'
+            var mobile = $el.data('mobile')
+            if (mobile) location.href = 'tel:' + mobile
           } else if ($el.hasClass('time-item-selected')) {
             $el.removeClass('time-item-selected')
             var temp = id.split('_')
@@ -364,6 +360,7 @@
         })
       }
     },
+
     /* eslint-disable no-undef */
     data () {
       return {
@@ -535,5 +532,50 @@
 
 .range-max, .range-min {
   color: #DA9F5F;
+}
+
+@media (max-width: 320px) {
+  .title {
+    font-size: 16px;
+    height: 30px;
+    line-height: 30px;
+  }
+
+  .swiper {
+    height: 345px !important;
+  }
+
+  .time-item {
+    height: 92px;
+    line-height: 92px;
+    margin-top: 10px;
+  }
+
+  .item-header {
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+  }
+
+  .item-body {
+    height: 46px;
+    line-height: 16px;
+    font-size: 13px;
+    padding: 10px 4px 4px 0px;
+  }
+
+  .time-item-reserved .item-body {
+    line-height: 16px;
+    font-size: 13px;
+  }
+
+  .item-body .icon-yuding {
+    font-size: 20px;
+  }
+
+  .split-text, .split-hr {
+    display: none;
+  }
+
 }
 </style>

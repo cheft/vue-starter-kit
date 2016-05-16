@@ -31,8 +31,8 @@
             </flexbox-item>
             <flexbox-item :span="3">
               <flexbox :gutter="0" orient="vertical">
-                <flexbox-item>
-                  <a class="btn" href="javascript:void(0);">补充信息</a>
+                <flexbox-item v-if="!item.title">
+                  <a class="btn" href="javascript:void(0);" v-link="'meet-details/' + item.id">补充信息</a>
                 </flexbox-item>
                 <flexbox-item>
                   <a class="btn" href="javascript:void(0);" @click="outClick(item.id)">退订会议</a>
@@ -148,20 +148,20 @@
     font-size: 14px;
     line-height: 1.5;
   }
-  
+
   .info label {
     color: #999;
   }
-  
+
   .info span {
     color: #333;
   }
-  
+
   .info em {
     font-style: normal;
     color: #f43530;
   }
-  
+
   .btn {
     display: block;
     margin: 10px 0;

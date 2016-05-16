@@ -9,20 +9,20 @@
       <div class="weui_opr_area">
           <p class="weui_btn_area">
             <group>
-              <x-input title="会议主题"></x-input>
-              <cell title="参与人员" is-link v-on:click="openPopup"></cell>
+              <x-input title="会议主题" :value.sync="title"></x-input>
+              <cell title="参与人员" is-link v-on:click="openPopup"  :value = "'已选 ' + personLen + ' 人'"></cell>
             </group>
-            <a href="javascript:;" class="weui_btn weui_btn_primary">提交</a>
+            <a href="javascript:;" class="weui_btn weui_btn_primary" v-on:click="submit">提交</a>
           </p>
       </div>
-      <div class="weui_extra_area">
+      <!-- <div class="weui_extra_area">
         <a v-link="'/reserved-meets'">太麻烦，不重要，不填写</a>
-      </div>
+      </div> -->
     </div>
     <popup v-ref:popup :show.sync="popupShow" height="100%">
-      <search @item-add-click="itemAddClick" @on-change="getResult" :results="results" :value.sync="value" class="search-body" placeholder="根据部门或者姓名搜索" cancel-text="取消"></search>
+      <search @item-add-click="itemAddClick" @on-change="getResult" :results="results" :value.sync="value" class="search-body" placeholder="根据部门或者姓名搜索" cancel-text="关闭"></search>
       <scroller v-ref:scroller lock-x scrollbar-y :height="listHeight + 'px'">
-        <group class="list-body" title="所选人员：">
+        <group class="list-body" :title="'你当前已选择 '  + personLen + ' 人'">
           <cell :title="p.orgName + p.name" v-for="p in selectedPersons">
             <div slot="value">
               <x-button type="warn" :id="p.id" @click="delPerson($index)">删除</x-button>
@@ -41,6 +41,8 @@
         </flexbox>
       </div>
     </popup>
+    <toast :show.sync="toastShow" :time=2000 type="cancel">{{toastTitle}}</toast>
+    <loading :show="loadingShow" text="加载中..."></loading>
   </div>
 </template>
 
@@ -53,8 +55,13 @@ import Popup from 'vux/components/popup/'
 import Flexbox from 'vux/components/flexbox/'
 import FlexboxItem from 'vux/components/flexbox-item/'
 import Scroller from 'vux/components/scroller/'
+import Loading from 'vux/components/loading'
+import Toast from 'vux/components/toast'
 
 import Search from './PersonSearch'
+import config from '../config'
+
+var updateUrl = config.apiPrefix + 'meeting/update'
 
 export default {
   components: {
@@ -66,12 +73,16 @@ export default {
     Search,
     Flexbox,
     FlexboxItem,
-    Scroller
+    Scroller,
+    Loading,
+    Toast
   },
 
   ready () {
+    console.log('111111111预订成功')
     document.title = '预定成功'
     var _this = this
+    console.log(this.$route.params.id)
     this.$refs.popup.$on('on-first-show', function () {
       _this.$refs.scroller.reset()
     })
@@ -81,10 +92,15 @@ export default {
   data () {
     return {
       listHeight: $(window).height() - 82,
+      title: '',
+      personLen: 0,
       popupShow: false,
       value: '',
       results: [],
-      selectedPersons: []
+      selectedPersons: [],
+      loadingShow: false,
+      toastTitle: '',
+      toastShow: false
     }
   },
 
@@ -103,10 +119,12 @@ export default {
 
     itemAddClick: function (item) {
       this.selectedPersons.push(item)
+      this.personLen = this.selectedPersons.length
     },
 
     delPerson: function (index) {
       this.selectedPersons.splice(index, 1)
+      this.personLen = this.selectedPersons.length
     },
 
     getResult: function () {
@@ -120,6 +138,29 @@ export default {
         })
       }
       this.results = rs
+    },
+
+    submit: function () {
+      var _this = this
+      this.loadingShow = true
+      console.log(this.$route)
+      var postData = {
+        id: this.$route.params.id,
+        title: this.title,
+        personIds: 'C253B687B77DEBE6E040A8C02B0046F5'
+      }
+      this.$http({url: updateUrl, method: 'POST', params: postData})
+      .then(function (response) {
+        if (response.data.code === 1000) {
+          _this.$router.go('/reserved-meets')
+        } else {
+          _this.toastShow = true
+          _this.toastTitle = '系统错误'
+        }
+      }, function (response) {
+        _this.toastShow = true
+        _this.toastTitle = '系统错误'
+      })
     }
   }
 }
