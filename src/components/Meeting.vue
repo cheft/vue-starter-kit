@@ -85,9 +85,12 @@
               </div>
             </flexbox-item>
             <flexbox-item>
-              <div class="time-item time-item-reserved" id="{{m.id}}_19-20">
+              <div class="time-item" id="{{m.id}}_19-20">
                 <div class="item-header">19 - 20 点</div>
-                <div class="item-body">技术中心-陈某某-技术会</div>
+                <div class="item-body">
+                  <i class="iconfont icon-yuding"></i>
+                  <div>请选择</div>
+                </div>
               </div>
             </flexbox-item>
           </flexbox>
@@ -96,14 +99,14 @@
     </div>
 
     <range v-ref:range slot="value" :value.sync="curMeeting" :min="0" :max="meetingsLen" min-HTML="<span style='font-size:12px;'>6楼</span>" max-HTML="<span style='font-size:12px;'>9楼</span>"></range>
-    <div style="margin: 10px;display:none;" id="submitDiv"><x-button type="primary">选择进行预定</x-button></div>
+    <div style="margin: 10px;display:none;" id="submitDiv"><x-button type="primary" v-on:click="confirmReserve">选择进行预定</x-button></div>
     <tabbar v-ref:tabbar>
       <tabbar-item v-for="d in days" :selected="$index == 0" :data-index="$index" v-on:click="tabClick(d)">
         <span slot="icon">{{d.week}}</span>
         <span slot="label">{{d.date}}</span>
       </tabbar-item>
     </tabbar>
-    <confirm :show.sync="confirmShow" :title="confirmTitle" cancel-text="取消" confirm-text="确定"><p style="text-align:center;"></p></confirm>
+    <confirm v-ref:confirm :show.sync="confirmShow" :title="confirmTitle" cancel-text="取消" confirm-text="确定"><p style="text-align:center;" ></p></confirm>
     <toast :show.sync="toastShow" :time=2000 type="cancel">{{toastTitle}}</toast>
     <loading :show="loadingShow" text="加载中..."></loading>
   </div>
@@ -146,13 +149,15 @@
 
     ready () {
       document.title = '预订会议室'
-      this.calc()
       this.fetchMeetings()
       var _this = this
       this.$refs.meetings.$watch('current', function (val) {
         _this.$set('curMeeting', val)
         _this.hideSubmitBtn()
         _this.clearSelectedFill()
+      })
+      this.$refs.confirm.$on('on-confirm', function () {
+        _this.reserve()
       })
       this.bindItemEvent()
     },
@@ -221,6 +226,7 @@
         this.loadingShow = true
         var _this = this
         this.$http({url: getMeetingUrl, method: 'POST'}).then(function (response) {
+          _this.calc()
           _this.$set('meetings', response.data.data.items)
           this.loadingShow = false
         }, function (response) {
@@ -285,19 +291,37 @@
         location.href = 'tel:13316463314'
       },
 
-      reserve: function () {
+      confirmReserve: function () {
         this.confirmShow = true
-        this.confirmTitle = '你将预定5月12号(周四)9-10点的6楼大会议室，确定吗?'
-        this.$http({url: reserveUrl, method: 'POST',
-          data: {mobile: '13418490922'}})
+        this.confirmTitle = '你将预定' + this.useDate + '的会议室，确定吗?'
+      },
+
+      reserve: function () {
+        var _this = this
+        var postData = {
+          id: this.selectCId,
+          mobile: '13418490922',
+          useDate: this.useDate,
+          dates: this.selectDates.join(',')
+        }
+
+        this.$http({url: reserveUrl, method: 'POST', params: postData})
         .then(function (response) {
-          console.log(response)
+          if (response.data.code === 2001) {
+            _this.toastShow = true
+            _this.toastTitle = '已被抢先预定'
+            setTimeout(function () {
+              _this.fetchReserveList(_this.useDate)
+            }, 500)
+          } else {
+            console.log(response.data.data.id)
+            this.$router.go('meet-details/' + response.data.data.id)
+          }
         }, function (response) {
           console.log(response)
           this.toastShow = true
-          this.toastTitle = '已被抢先预定'
+          this.toastTitle = '系统错误'
         })
-        this.$router.go('meet-details/123')
       },
       /* eslint-disable no-undef */
       showSubmitBtn: function () {
