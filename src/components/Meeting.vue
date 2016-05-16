@@ -129,33 +129,6 @@
   let getReserveList = config.apiPrefix + 'meeting/reserveList'
   let reserveUrl = config.apiPrefix + 'meeting/add'
 
-  let reserveList = [
-    {
-      id: '88cf361b-4b48-4c15-b566-a9934346a43d',
-      conferenceName: '大培训室',
-      conferenceId: '会议室ID',
-      storey: '7',
-      orgName: 'ERP研发部',
-      mobile: '15999999999',
-      personName: '张三',
-      useDate: '2016-05-10',
-      startDate: '10',
-      endDate: '12'
-    },
-    {
-      id: '88cf361b-4b48-4c15-b566-a9934346a43d',
-      conferenceName: '大培训室',
-      conferenceId: '会议室ID',
-      storey: '7',
-      orgName: 'ERP研发部',
-      mobile: '15999999999',
-      personName: '李四',
-      useDate: '2016-05-10',
-      startDate: '15',
-      endDate: '18'
-    }
-  ]
-
   export default {
     components: {
       XButton,
@@ -235,9 +208,16 @@
           days.push(this.dayBuilder(date))
         }
         this.fetchReserveList(days[0].value)
+        this.useDate = days[0].value
         this.$set('days', days)
       },
       fetchMeetings: function () {
+        // this.meetings = [
+        //   {id: 1, storey: 6, name: '小会议室'},
+        //   {id: 2, storey: 6, name: '中会议室'},
+        //   {id: 3, storey: 6, name: '大会议室'}
+        // ]
+        // console.log(getMeetingUrl)
         this.loadingShow = true
         var _this = this
         this.$http({url: getMeetingUrl, method: 'POST'}).then(function (response) {
@@ -258,6 +238,7 @@
 
       /* eslint-disable no-undef */
       clearSelectedFill: function () {
+        this.selectDates = []
         $('.time-item').removeClass('time-item-selected')
       },
 
@@ -294,13 +275,9 @@
       },
 
       tabClick: function (item) {
-        console.log(item)
+        console.log(item.value)
+        this.useDate = item.value
         this.fetchReserveList(item.value)
-      },
-
-      selectMeet: function (e) {
-        console.log(e.target.parentNode.classList)
-        e.target.parentNode.classList.add('time-item-selected')
       },
 
       /* eslint-disable no-undef */
@@ -311,18 +288,14 @@
       reserve: function () {
         this.confirmShow = true
         this.confirmTitle = '你将预定5月12号(周四)9-10点的6楼大会议室，确定吗?'
-
-        this.toastShow = true
-        this.toastTitle = '已被抢先预定'
-
-        console.log(reserveUrl)
         this.$http({url: reserveUrl, method: 'POST',
-          data: {storey: 6, date: date}})
+          data: {mobile: '13418490922'}})
         .then(function (response) {
           console.log(response)
-          this.$set('reserveList', reserveList)
         }, function (response) {
           console.log(response)
+          this.toastShow = true
+          this.toastTitle = '已被抢先预定'
         })
         this.$router.go('meet-details/123')
       },
@@ -335,18 +308,34 @@
         $('.vux-range-input-box').show()
         $('#submitDiv').hide()
       },
+      removeDates: function (value) {
+        var _this = this
+        this.selectDates.forEach(function (item, i) {
+          if (value === item) {
+            _this.selectDates.splice(i, 1)
+          }
+        })
+      },
       /* eslint-disable no-undef */
       bindItemEvent: function () {
         var _this = this
         $(document).on('click', '.time-item', function (e) {
           var $el = $(e.currentTarget)
+          var id = $el.attr('id')
+          console.log($el.attr('id'))
           if ($el.hasClass('time-item-reserved')) {
             location.href = 'tel:13316463314'
           } else if ($el.hasClass('time-item-selected')) {
             $el.removeClass('time-item-selected')
+            var temp = id.split('_')
+            _this.removeDates(temp[1])
+            if (_this.selectDates.length === 0) _this.hideSubmitBtn()
           } else {
             $el.addClass('time-item-selected')
-            _this.showSubmitBtn()
+            if (_this.selectDates.length === 0) _this.showSubmitBtn()
+            var tmp = id.split('_')
+            _this.selectCId = tmp[0]
+            _this.selectDates.push(tmp[1])
           }
         })
       }
@@ -366,7 +355,10 @@
         confirmTitle: '',
         toastShow: false,
         toastTitle: '',
-        loadingShow: false
+        loadingShow: false,
+        selectDates: [],
+        selectCId: '',
+        useDate: ''
         // width: $(window).width() - 20,
         // totalWidth: $(window).width() * 14 - 20
       }
