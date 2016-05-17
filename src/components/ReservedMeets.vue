@@ -22,10 +22,10 @@
                   <p class="info"><label>开始时间：</label><em>{{ item.date }}</em></p>
                 </flexbox-item>
                 <flexbox-item>
-                  <p class="info"><label>会议时长：</label><span>{{ item.duration }}</span></p>
+                  <p class="info"><label>会议时长：</label><span>{{ item.dates|duration }}点</span></p>
                 </flexbox-item>
                 <flexbox-item>
-                  <p class="info"><label>会议地点：</label><span>{{ item.site }}</span></p>
+                  <p class="info"><label>会议地点：</label><span>{{ item.conferenceName }}</span></p>
                 </flexbox-item>
               </flexbox>
             </flexbox-item>
@@ -137,6 +137,11 @@
         failure: false,
         system: false,
         show: false
+      }
+    },
+    filters: {
+      duration: function (value) {
+        return value.replace(/\-(\d|\,|\-)*\-/, '-')
       }
     }
   }
