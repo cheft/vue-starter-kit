@@ -3,8 +3,9 @@
     <div class="weui_msg">
       <div class="weui_icon_area"><i class="weui_icon_success weui_icon_msg"></i></div>
       <div class="weui_text_area">
-          <h2 class="weui_msg_title">5月12号9-10点的七楼一号会议室已预定</h2>
-          <p class="weui_msg_desc">为了能通知到参会人员，请补充以下信息</p>
+          <h2 class="weui_msg_title">已预定{{meetInfo.useDate}}时间为{{meetInfo.dates}}的
+          <div>{{meetInfo.storey}}楼{{meetInfo.conferenceName}}</div></h2>
+          <p class="weui_msg_desc">为了能通知到参会人员，请补充信息</p>
       </div>
       <div class="weui_opr_area">
           <p class="weui_btn_area">
@@ -43,6 +44,7 @@
     </popup>
     <toast :show.sync="toastShow" :time=2000 type="cancel">{{toastTitle}}</toast>
     <loading :show="loadingShow" text="加载中..."></loading>
+    <confirm v-ref:confirm :show.sync="confirmShow" :title="confirmTitle" cancel-text="取消" confirm-text="继续"><p style="text-align:center;" ></p></confirm>
   </div>
 </template>
 
@@ -57,11 +59,13 @@ import FlexboxItem from 'vux/components/flexbox-item/'
 import Scroller from 'vux/components/scroller/'
 import Loading from 'vux/components/loading'
 import Toast from 'vux/components/toast'
+import Confirm from 'vux/components/confirm'
 
 import Search from './PersonSearch'
 import config from '../config'
 
 var updateUrl = config.apiPrefix + 'meeting/update'
+var fetchUrl = config.apiPrefix + 'meeting/selectByid'
 
 export default {
   components: {
@@ -75,7 +79,8 @@ export default {
     FlexboxItem,
     Scroller,
     Loading,
-    Toast
+    Toast,
+    Confirm
   },
 
   ready () {
@@ -84,6 +89,11 @@ export default {
     this.$refs.popup.$on('on-first-show', function () {
       _this.$refs.scroller.reset()
     })
+    this.$refs.confirm.$on('on-confirm', function () {
+      _this.submitHandle()
+    })
+
+    this.fetchMeet()
   },
 
   /* eslint-disable no-undef */
@@ -98,7 +108,10 @@ export default {
       selectedPersons: [],
       loadingShow: false,
       toastTitle: '',
-      toastShow: false
+      toastShow: false,
+      confirmTitle: '',
+      confirmShow: false,
+      meetInfo: ''
     }
   },
 
@@ -138,10 +151,9 @@ export default {
       this.results = rs
     },
 
-    submit: function () {
+    submitHandle: function () {
       var _this = this
       this.loadingShow = true
-      console.log(this.$route)
       var postData = {
         id: this.$route.params.id,
         title: this.title,
@@ -158,6 +170,37 @@ export default {
       }, function (response) {
         _this.toastShow = true
         _this.toastTitle = '系统错误'
+      })
+    },
+
+    submit: function () {
+      if (!this.title) {
+        this.toastTitle = '会议主题不允许为空'
+        this.toastShow = true
+        return
+      }
+      if (this.selectedPersons.length === 0) {
+        this.confirmTitle = '参会人员没选择，继续提交将不能再补充，是否继续？'
+        this.confirmShow = true
+        return
+      }
+      this.submitHandle()
+    },
+    /* eslint-disable no-useless-escape */
+    fetchMeet: function () {
+      this.loadingShow = true
+      this.$http({url: fetchUrl, method: 'POST', params: {id: this.$route.params.id}})
+      .then(function (response) {
+        if (response.data.code === 1000) {
+          var info = response.data.data
+          this.meetInfo = info
+          this.meetInfo.dates = this.meetInfo.dates.replace(/\-(\d|\,|\-)*\-/, '-')
+        }
+        this.loadingShow = false
+      }, function (response) {
+        this.loadingShow = false
+        this.toastShow = true
+        this.toastTitle = '系统错误'
       })
     }
   }

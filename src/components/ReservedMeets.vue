@@ -63,7 +63,7 @@
   let meetingType = 'YES'
   export default {
     ready () {
-      Config.setTitle('我的预定')
+      Config.setTitle('已预定会议室')
       this.$set('heg', window.outerHeight)
       let params = {
         mobile: phoneNumber,
@@ -141,6 +141,7 @@
       }
     },
     filters: {
+      /* eslint-disable no-useless-escape */
       duration: function (value) {
         return value.replace(/\-(\d|\,|\-)*\-/, '-')
       }

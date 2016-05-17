@@ -103,9 +103,10 @@
       },
       /* eslint-disable no-undef */
       itemAddClick: function (item, e) {
-        console.log(e)
+        if ($(e.target).hasClass('weui_btn_primary')) {
+          this.$dispatch('item-add-click', item)
+        }
         $(e.target).removeClass('weui_btn_primary').addClass('weui_btn_default').text('已增加')
-        this.$dispatch('item-add-click', item)
       }
     },
     /* eslint-disable no-undef */

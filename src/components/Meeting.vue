@@ -2,7 +2,7 @@
   <div>
     <div style="padding: 10px;">
       <swiper :height="height" v-ref:meetings :list="test">
-        <swiper-item class="swiper-item" v-for="m in meetings">
+        <swiper-item class="swiper-item" v-for="m in meetings" id="{{'swiper-' + $index}}" data-name="{{m.name}}" data-storey="{{m.storey}}">
           <div class="title fadeInUp animated">{{m.storey}}楼 {{m.name}} (限 {{m.number}} 人)</div>
           <flexbox>
             <flexbox-item>
@@ -107,7 +107,7 @@
       </tabbar-item>
     </tabbar>
     <confirm v-ref:confirm :show.sync="confirmShow" :title="confirmTitle" cancel-text="取消" confirm-text="确定"><p style="text-align:center;" ></p></confirm>
-    <toast :show.sync="toastShow" :time=2000 type="cancel">{{toastTitle}}</toast>
+    <toast :show.sync="toastShow" :time=1000 type="cancel">{{toastTitle}}</toast>
     <loading :show="loadingShow" text="加载中..."></loading>
   </div>
 
@@ -216,6 +216,7 @@
         this.useDate = days[0].value
         this.$set('days', days)
       },
+      /* eslint-disable no-undef */
       fetchMeetings: function () {
         // this.meetings = [
         //   {id: 1, storey: 6, name: '小会议室'},
@@ -223,12 +224,14 @@
         //   {id: 3, storey: 6, name: '大会议室'}
         // ]
         // console.log(getMeetingUrl)
+        $('.vux-range-input-box').hide()
         this.loadingShow = true
         var _this = this
         this.$http({url: getMeetingUrl, method: 'POST'}).then(function (response) {
           _this.calc()
           _this.$set('meetings', response.data.data.items)
           this.loadingShow = false
+          $('.vux-range-input-box').show()
         }, function (response) {
           console.log(response)
           this.loadingShow = false
@@ -264,7 +267,7 @@
         this.$http({url: getReserveList, method: 'POST', params: {storey: 6, date: date}}).then(function (response) {
           var list = response.data.data.items
           list.forEach(function (item) {
-            var dates = item.dates
+            var dates = item.dates || ''
             var ds = dates.split(',')
             ds.forEach(function (d) {
               _this.fillReserveMeet(item, d)
@@ -272,7 +275,6 @@
           })
           this.loadingShow = false
         }, function (response) {
-          console.log(response)
           this.loadingShow = false
           this.toastShow = true
           this.toastTitle = '系统错误'
@@ -280,21 +282,23 @@
       },
 
       tabClick: function (item) {
-        console.log(item.value)
         this.useDate = item.value
         this.fetchReserveList(item.value)
       },
-
+      /* eslint-disable no-useless-escape */
+      /* eslint-disable no-undef */
       confirmReserve: function () {
+        var dates = this.selectDates.join(',').replace(/\-(\d|\,|\-)*\-/, '-')
         this.confirmShow = true
-        this.confirmTitle = '你将预定' + this.useDate + '的会议室，确定吗?'
+        var $el = $('#swiper-' + this.curMeeting)
+        this.confirmTitle = '将预定' + this.useDate + '时间为' + dates + '点的' + $el.data('storey') + '楼' + $el.data('name') + '，确定吗?'
       },
 
       reserve: function () {
         var _this = this
         var postData = {
           id: this.selectCId,
-          mobile: '13418490922',
+          mobile: config.mobile,
           useDate: this.useDate,
           dates: this.selectDates.join(',')
         }
@@ -303,12 +307,11 @@
         .then(function (response) {
           if (response.data.code === 2001) {
             _this.toastShow = true
-            _this.toastTitle = '已被抢先预定'
+            _this.toastTitle = '会议室已被预订'
             setTimeout(function () {
               _this.fetchReserveList(_this.useDate)
             }, 500)
           } else {
-            console.log(response.data.data.id)
             this.$router.go('meet-details/' + response.data.data.id)
           }
         }, function (response) {
@@ -334,27 +337,69 @@
           }
         })
       },
+
+      isNear: function (current) {
+        if (this.selectDates.length === 0) return 'l'
+        var first = this.selectDates[0]
+        var last = this.selectDates[this.selectDates.length - 1]
+        var f = +first.split('-')[0]
+        var l = +last.split('-')[1]
+
+        var cf = +current.split('-')[0]
+        var cl = +current.split('-')[1]
+        if (cf === l || (l === 12 && cf === 14)) {
+          return 'l'
+        }
+        if (cl === f || (f === 14 && cl === 12)) {
+          return 'f'
+        }
+        return false
+      },
+
+      isBorder: function (current) {
+        var first = this.selectDates[0]
+        var last = this.selectDates[this.selectDates.length - 1]
+        if (current === first || current === last) return true
+        return false
+      },
+
       /* eslint-disable no-undef */
       bindItemEvent: function () {
         var _this = this
         $(document).off('click.time-item').on('click.time-item', '.time-item', function (e) {
           var $el = $(e.currentTarget)
           var id = $el.attr('id')
-          console.log($el.attr('id'))
           if ($el.hasClass('time-item-reserved')) {
             var mobile = $el.data('mobile')
             if (mobile) location.href = 'tel:' + mobile
           } else if ($el.hasClass('time-item-selected')) {
+            var tmp1 = id.split('_')
+            var date1 = tmp1[1]
+            if (!_this.isBorder(date1)) {
+              _this.toastTitle = '不能直接取消中间时间段'
+              _this.toastShow = true
+              return
+            }
             $el.removeClass('time-item-selected')
-            var temp = id.split('_')
-            _this.removeDates(temp[1])
+            _this.removeDates(date1)
             if (_this.selectDates.length === 0) _this.hideSubmitBtn()
           } else {
+            var tmp2 = id.split('_')
+            var date2 = tmp2[1]
+            var near = _this.isNear(date2)
+            if (!near) {
+              _this.toastTitle = '只能选择连续时间段'
+              _this.toastShow = true
+              return
+            }
             $el.addClass('time-item-selected')
             if (_this.selectDates.length === 0) _this.showSubmitBtn()
-            var tmp = id.split('_')
-            _this.selectCId = tmp[0]
-            _this.selectDates.push(tmp[1])
+            _this.selectCId = tmp2[0]
+            if (near === 'l') {
+              _this.selectDates.push(date2)
+            } else {
+              _this.selectDates.unshift(date2)
+            }
           }
         })
       }
