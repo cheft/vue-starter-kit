@@ -24,7 +24,7 @@
       <search @item-add-click="itemAddClick" @on-change="getResult" :results="results" :value.sync="value" class="search-body" placeholder="根据部门或者姓名搜索" cancel-text="关闭"></search>
       <scroller v-ref:scroller lock-x scrollbar-y :height="listHeight + 'px'">
         <group class="list-body" :title="'你当前已选择 '  + personLen + ' 人'">
-          <cell :title="p.orgName + p.name" v-for="p in selectedPersons">
+          <cell :title="p.orgName + '-' + p.personName" v-for="p in selectedPersons">
             <div slot="value">
               <x-button type="warn" :id="p.id" @click="delPerson($index)">删除</x-button>
             </div>
@@ -65,7 +65,8 @@ import Search from './PersonSearch'
 import config from '../config'
 
 var updateUrl = config.apiPrefix + 'meeting/update'
-var fetchUrl = config.apiPrefix + 'meeting/selectByid'
+var fetchUrl = config.apiPrefix + 'meeting/select'
+var contactsUrl = config.apiPrefix + 'contactsList/listByKeyword'
 
 export default {
   components: {
@@ -86,7 +87,7 @@ export default {
   ready () {
     config.setTitle('补充信息')
     var _this = this
-    this.$refs.popup.$on('on-first-show', function () {
+    this.$refs.popup.$watch('show', function () {
       _this.$refs.scroller.reset()
     })
     this.$refs.confirm.$on('on-confirm', function () {
@@ -139,30 +140,16 @@ export default {
     },
 
     getResult: function () {
-      let val = this.value
-      let rs = []
-      for (let i = 0; i < 15; i++) {
-        rs.push({
-          orgName: '用户体验中心',
-          name: val + i,
-          id: i
-        })
-      }
-      this.results = rs
-    },
-
-    submitHandle: function () {
       var _this = this
-      this.loadingShow = true
-      var postData = {
-        id: this.$route.params.id,
-        title: this.title,
-        personIds: 'C253B687B77DEBE6E040A8C02B0046F5'
+      if (!this.valu) return
+      var params = {
+        keyword: this.value,
+        mobile: config.mobile
       }
-      this.$http({url: updateUrl, method: 'POST', params: postData})
+      this.$http({url: contactsUrl, method: 'POST', params: params})
       .then(function (response) {
         if (response.data.code === 1000) {
-          _this.$router.go('/reserved-meets')
+          _this.results = response.data.data.items
         } else {
           _this.toastShow = true
           _this.toastTitle = '系统错误'
@@ -170,6 +157,38 @@ export default {
       }, function (response) {
         _this.toastShow = true
         _this.toastTitle = '系统错误'
+      })
+    },
+
+    getPersonIds: function () {
+      var tmp = []
+      this.selectedPersons.forEach(function (item) {
+        tmp.push(item.id)
+      })
+      return tmp.join(',')
+    },
+
+    submitHandle: function () {
+      var _this = this
+      this.loadingShow = true
+      var params = {
+        id: this.$route.params.id,
+        title: this.title,
+        personIds: this.getPersonIds()
+      }
+      this.$http({url: updateUrl, method: 'POST', params: params})
+      .then(function (response) {
+        if (response.data.code === 1000) {
+          _this.$router.go('/reserved-meets')
+        } else {
+          _this.toastShow = true
+          _this.toastTitle = '系统错误'
+          _this.loadingShow = false
+        }
+      }, function (response) {
+        _this.toastShow = true
+        _this.toastTitle = '系统错误'
+        _this.loadingShow = false
       })
     },
 
@@ -241,4 +260,10 @@ export default {
   .footer-btns .weui_btn {
     margin: 20px 10px 20px 10px;
   }
+
+@media (max-width: 320px) {
+  .weui_msg .weui_msg_title {
+    font-size: 16px;
+  }
+}
 </style>

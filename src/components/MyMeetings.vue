@@ -14,7 +14,7 @@
         <div class="tip-info">
           <p>您有{{ items.length }}个会议待开</p>
         </div>
-        <div v-for="item in items" class="group-body" v-link="'notice-details/' + item.id">
+        <div v-for="item in items" class="group-body">
           <flexbox :gutter="0" class="flex-box">
             <flexbox-item>
               <flexbox :gutter="0" orient="vertical">
@@ -84,7 +84,7 @@
       return {
         isLoading: true,
         noneData: true,
-        tipInfo: '正在加载中...',
+        tipInfo: '加载中...',
         items: [],
         heg: 0
       }

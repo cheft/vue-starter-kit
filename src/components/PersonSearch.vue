@@ -22,7 +22,7 @@
       <scroller v-ref:scroller lock-x scrollbar-y :height="listHeight + 'px'">
         <div class="box2">
           <div v-else v-for="item in results">
-            <cell :title="item.orgName + item.name">
+            <cell :title="item.orgName + '-' + item.personName">
               <div slot="value">
                 <x-button type="primary" @click="itemAddClick(item, $event)">增加</x-button>
               </div>
@@ -130,6 +130,8 @@
       },
       value: function (val) {
         this.$dispatch('on-change', this.value)
+      },
+      results: function () {
         var _this = this
         Vue.nextTick(function () {
           setTimeout(function () {

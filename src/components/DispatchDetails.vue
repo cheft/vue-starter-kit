@@ -62,7 +62,7 @@
       return {
         isLoading: true,
         noneData: true,
-        tipInfo: '正在加载中...',
+        tipInfo: '加载中...',
         items: {}
       }
     }
@@ -77,24 +77,24 @@
     line-height: 1.5;
     text-align: center;
   }
-  
+
   .info {
     font-size: 13px;
     color: #f77c79;
     line-height: 1.5;
   }
-  
+
   .time-body {
     padding: 10px 0;
     text-align: right;
   }
-  
+
   .time-body time {
     font-size: 13px;
     color: #f77c79;
     line-height: 1.5;
   }
-  
+
   .section-body {
     border-top: 1px solid #f43530;
     border-bottom: 1px solid #f77c79;

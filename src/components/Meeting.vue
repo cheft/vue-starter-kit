@@ -33,9 +33,13 @@
               </div>
             </flexbox-item>
           </flexbox>
-          <div class="split-text"><i class="iconfont icon-arrowtopo"></i> 上午</div>
-          <hr class="split-hr">
-          <div class="split-text" style="margin-bottom: 0;"><i class="iconfont icon-arrowdowno"></i> 下午</div>
+          <div class="split-text">
+            <div class="pull-left"><i class="iconfont icon-arrowtopo"></i> 上午</div>
+            <div class="pull-right"><i class="iconfont icon-arrowdowno"></i> 下午</div>
+            <div class="clearfix"></div>
+          </div>
+          <!-- <hr class="split-hr"> -->
+          <!-- <div class="split-text" style="margin-bottom: 0;"><i class="iconfont icon-arrowdowno"></i> 下午</div> -->
           <flexbox>
             <flexbox-item>
               <div class="time-item" id="{{m.id}}_14-15">
@@ -241,7 +245,7 @@
 
       /* eslint-disable no-undef */
       clearReservedFill: function () {
-        $('.time-item').removeClass('time-item-reserved')
+        $('.time-item').removeClass('time-item-reserved').removeClass('time-item-even')
         $('.item-body').html('<i class="iconfont icon-yuding"></i><div>请选择</div>')
       },
 
@@ -252,10 +256,11 @@
       },
 
       /* eslint-disable no-undef */
-      fillReserveMeet: function (item, date) {
+      fillReserveMeet: function (item, date, isEven) {
         var $el = $('#' + item.conferenceId + '_' + date)
         $el.addClass('time-item-reserved').data('mobile', item.mobile)
-        $el.find('.item-body').html('<div>' + item.orgName + '-' + item.personName + '</div><div>' + (item.title || '会议') + '</div>')
+        if (isEven) $el.addClass('time-item-even')
+        $el.find('.item-body').html('<div>' + item.orgName + '-' + item.personName + '</div><div>' + (item.title || '无会议主题') + '</div>')
       },
 
       fetchReserveList: function (date) {
@@ -266,11 +271,11 @@
         var _this = this
         this.$http({url: getReserveList, method: 'POST', params: {storey: 6, date: date}}).then(function (response) {
           var list = response.data.data.items
-          list.forEach(function (item) {
+          list.forEach(function (item, i) {
             var dates = item.dates || ''
             var ds = dates.split(',')
             ds.forEach(function (d) {
-              _this.fillReserveMeet(item, d)
+              _this.fillReserveMeet(item, d, i % 2)
             })
           })
           this.loadingShow = false
@@ -448,9 +453,9 @@
 }
 
 .title {
-  font-size: 18px;
-  height: 40px;
-  line-height: 40px;
+  font-size: 24px;
+  height: 60px;
+  line-height: 60px;
   font-weight: 700;
 }
 
@@ -527,6 +532,14 @@
   background: #FF9800;
 }
 
+.time-item-reserved.time-item-even .item-header {
+  background-color: #E64A19;
+}
+
+.time-item-reserved.time-item-even {
+  background-color: #FF5722;
+}
+
 .time-item-selected .item-header {
   background-color: #388E3C;
 }
@@ -538,8 +551,30 @@
 .split-text {
   font-size: 13px;
   line-height: 13px;
-  margin: 10px;
+  margin: 10px 10px 0 10px;
   color: #888;
+}
+
+.split-text .pull-left {
+  float: left;
+}
+
+.split-text .pull-right {
+  float: right;
+}
+
+.clearfix {
+  *zoom: 1;
+}
+
+.clearfix:before, .clearfix:after {
+  display: table;
+  line-height: 0;
+  content: "";
+}
+
+.clearfix:after {
+  clear: both;
 }
 
 .split-hr {
@@ -578,7 +613,14 @@
   color: #DA9F5F;
 }
 
-@media (max-width: 320px) {
+
+@media (max-height: 667px) {
+  .swiper {
+    height: 470px !important;
+  }
+}
+
+@media (max-height: 568px) {
   .title {
     font-size: 16px;
     height: 30px;
@@ -586,7 +628,7 @@
   }
 
   .swiper {
-    height: 345px !important;
+    height: 370px !important;
   }
 
   .time-item {
@@ -617,9 +659,59 @@
     font-size: 20px;
   }
 
-  .split-text, .split-hr {
-    display: none;
+  .split-text {
+    font-size: 13px;
+    line-height: 13px;
+    margin: 10px 10px 0 10px;
+    color: #888;
+  }
+}
+
+@media (max-height: 480px) {
+  .title {
+    font-size: 16px;
+    height: 20px;
+    line-height: 20px;
   }
 
+  .swiper {
+    height: 330px !important;
+  }
+
+  .time-item {
+    height: 85px;
+    line-height: 85px;
+    margin -top: 5px;
+  }
+
+  .item-header {
+    height: 24px;
+    line-height: 24px;
+    font-size: 14px;
+  }
+
+  .item-body {
+    height: 46px;
+    line-height: 16px;
+    font-size: 13px;
+    padding: 10px 4px 4px 0px;
+  }
+
+  .time-item-reserved .item-body {
+    line-height: 16px;
+    font-size: 13px;
+  }
+
+  .item-body .icon-yuding {
+    font-size: 20px;
+  }
+
+  .split-text {
+    font-size: 13px;
+    line-height: 13px;
+    margin: 5px 10px 0 10px;
+    color: #888;
+  }
 }
+
 </style>

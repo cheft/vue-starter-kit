@@ -130,7 +130,7 @@
       return {
         isLoading: true,
         noneData: true,
-        tipInfo: '正在加载中...',
+        tipInfo: '加载中...',
         items: [],
         heg: 0,
         id: '',
