@@ -8,13 +8,12 @@
         <p class="none-data"><icon type="warn"></icon><span>{{ tipInfo }}</span></p>
       </div>
       <div v-else class="personal-info">
-        <blur :blur-amount=50 :url="url">
-          <p class="center">
-            <img :src="url">
-              <br/>
-            <span>{{ items.personName }}</span>
-          </p>
-        </blur>
+        <div class="box-align portrait-body">
+          <div>
+            <img :src="url" class="portrait">
+            <p>{{ items.personName }}</p>
+          </div>
+        </div>
         <div class="cell-info">
           <div class="box-middel cell">
             <p class="label">部门</p>
@@ -24,7 +23,7 @@
             <p class="label">手机</p>
             <p class="content flex"><a :href="'tel:' + items.mobile">{{ items.mobile }}</a></p>
           </div>
-          <div class="box-middel cell">
+          <div class="box-middel cell" v-if="items.cell">
             <p class="label">座机</p>
             <p class="content flex"><a :href="'tel:' + items.cell">{{ items.cell }}</a></p>
           </div>
@@ -36,6 +35,10 @@
             <p class="label">邮箱</p>
             <p class="content flex">{{ items.email }}</p>
           </div>
+        </div>
+        <div class="footer-body box-middel">
+          <a class="flex" :href="'tel:' + items.mobile"><i class="tel"></i>打电话</a>
+          <a class="flex" :href="'sms:' + items.mobile"><i class="msm"></i>发短信</a>
         </div>
       </div>
     </template>
@@ -84,7 +87,7 @@
         noneData: true,
         items: {},
         tipInfo: '加载中...',
-        url: 'static/img/nnn.jpg'
+        url: 'static/img/cheft.png'
       }
     }
   }
@@ -92,14 +95,22 @@
 
 <style scoped>
   @import '../../static/css/public.css';
-  .center {
-    text-align: center;
-    padding-top: 30px;
-    color: #fff;
-    font-size: 16px;
+  .portrait-body {
+    height: 200px;
+    background: -moz-linear-gradient(top, #fbc286 0%, #ff992d 50%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fbc286), color-stop(50%,#ff992d));
+    background: -webkit-linear-gradient(top, #fbc286 0%,#ff992d 50%);
+    background: linear-gradient(to bottom, #fbc286 0%,#ff992d 50%);
   }
   
-  .center img {
+  .portrait-body p {
+    font-size: 16px;
+    color: #fff;
+    line-height: 1.5;
+    text-align: center;
+  }
+  
+  .portrait {
     width: 100px;
     height: 100px;
     border-radius: 50%;
@@ -136,6 +147,42 @@
   }
   
   .content a {
-    color: #f60;
+    color: #02bb00;
+  }
+  
+  .footer-body {
+    position: fixed;
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 800;
+  }
+  
+  .footer-body a {
+    display: block;
+    padding: 10px 0;
+    font-size: 14px;
+    color: #fff;
+    line-height: 1.5;
+    text-align: center;
+    background-color: #ff992d;
+  }
+  
+  .footer-body a i {
+    display: inline-block;
+    width: 2em;
+    height: 2em;
+    vertical-align: middle;
+  }
+  
+  .footer-body a i.tel {
+    background: url(../../static/img/tel.png) 50% 50% no-repeat;
+    background-size: 100% auto;
+  }
+  
+  .footer-body a i.msm {
+    background: url(../../static/img/msm.png) 50% 50% no-repeat;
+    background-size: 100% auto;
   }
 </style>
