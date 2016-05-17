@@ -90,9 +90,9 @@ export default {
     this.$refs.popup.$watch('show', function () {
       _this.$refs.scroller.reset()
     })
-    this.$refs.confirm.$on('on-confirm', function () {
-      _this.submitHandle()
-    })
+    // this.$refs.confirm.$on('on-confirm', function () {
+    //   _this.submitHandle()
+    // })
 
     this.fetchMeet()
   },
@@ -141,7 +141,7 @@ export default {
 
     getResult: function () {
       var _this = this
-      if (!this.valu) return
+      if (!this.value) return
       var params = {
         keyword: this.value,
         mobile: config.mobile
@@ -199,8 +199,8 @@ export default {
         return
       }
       if (this.selectedPersons.length === 0) {
-        this.confirmTitle = '参会人员没选择，继续提交将不能再补充，是否继续？'
-        this.confirmShow = true
+        this.toastTitle = '参会人员不允许为空'
+        this.toastShow = true
         return
       }
       this.submitHandle()
@@ -261,9 +261,9 @@ export default {
     margin: 20px 10px 20px 10px;
   }
 
-@media (max-width: 320px) {
-  .weui_msg .weui_msg_title {
-    font-size: 16px;
+  @media (max-width: 320px) {
+    .weui_msg .weui_msg_title {
+      font-size: 16px;
+    }
   }
-}
 </style>

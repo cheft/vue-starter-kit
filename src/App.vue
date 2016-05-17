@@ -4,7 +4,7 @@
 
 <style>
 @import '~vux/vux.css';
-@import 'http://at.alicdn.com/t/font_1463026191_026722.css';
+@import 'http://at.alicdn.com/t/font_1463486486_2607765.css';
 /*@import './transitions/pt-page.css';*/
 .fade-transition {
   transition: opacity .2s ease;

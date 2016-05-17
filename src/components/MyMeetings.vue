@@ -19,7 +19,7 @@
             <flexbox-item>
               <flexbox :gutter="0" orient="vertical">
                 <flexbox-item>
-                  <p class="info"><label>会议主题：</label><span>{{ item.title }}</span></p>
+                  <p class="info"><label>会议主题：</label><span>{{ item.title || '无主题' }}</span></p>
                 </flexbox-item>
                 <flexbox-item>
                   <p class="info"><label>开始时间：</label><em>{{ item.date }}</em></p>

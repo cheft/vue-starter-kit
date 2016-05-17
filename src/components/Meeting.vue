@@ -3,7 +3,7 @@
     <div style="padding: 10px;">
       <swiper :height="height" v-ref:meetings :list="test">
         <swiper-item class="swiper-item" v-for="m in meetings" id="{{'swiper-' + $index}}" data-name="{{m.name}}" data-storey="{{m.storey}}">
-          <div class="title fadeInUp animated">{{m.storey}}楼 {{m.name}} (限 {{m.number}} 人)</div>
+          <div class="title fadeInUp animated"><span class="highlight">{{m.storey}}楼</span> {{m.name}} (限 {{m.number}} 人)</div>
           <flexbox>
             <flexbox-item>
               <div class="time-item" id="{{m.id}}_9-10">
@@ -34,8 +34,8 @@
             </flexbox-item>
           </flexbox>
           <div class="split-text">
-            <div class="pull-left"><i class="iconfont icon-arrowtopo"></i> 上午</div>
-            <div class="pull-right"><i class="iconfont icon-arrowdowno"></i> 下午</div>
+            <div class="pull-left"><i class="iconfont icon-jtup"></i> 上午</div>
+            <div class="pull-right"><i class="iconfont icon-jtdown"></i> 下午</div>
             <div class="clearfix"></div>
           </div>
           <!-- <hr class="split-hr"> -->
@@ -242,10 +242,28 @@
           this.toastTitle = '系统错误'
         })
       },
+      /* eslint-disable no-undef */
+      disabledExpired: function (date) {
+        $('.time-item[id$="_' + date + '"]').addClass('time-item-disabled')
+      },
+
+      handleExpired: function (date) {
+        var now = new Date()
+        var hour = now.getHours()
+        var month = now.getMonth() + 1
+        if ((month + '').length === 1) month = '0' + month
+        var nowDate = now.getFullYear() + '-' + month + '-' + now.getDate()
+        if (nowDate !== date) return
+        for (var i = 9; i < hour; i++) {
+          if (i !== 12 && i !== 13) {
+            this.disabledExpired(i + '-' + (i + 1))
+          }
+        }
+      },
 
       /* eslint-disable no-undef */
       clearReservedFill: function () {
-        $('.time-item').removeClass('time-item-reserved').removeClass('time-item-even')
+        $('.time-item').removeClass('time-item-reserved')
         $('.item-body').html('<i class="iconfont icon-yuding"></i><div>请选择</div>')
       },
 
@@ -255,27 +273,27 @@
         $('.time-item').removeClass('time-item-selected')
       },
 
+      clearDisabledFill: function () {
+        $('.time-item').removeClass('time-item-disabled')
+      },
+
       /* eslint-disable no-undef */
-      fillReserveMeet: function (item, date, isEven) {
+      fillReserveMeet: function (item, date) {
         var $el = $('#' + item.conferenceId + '_' + date)
         $el.addClass('time-item-reserved').data('mobile', item.mobile)
-        if (isEven) $el.addClass('time-item-even')
         $el.find('.item-body').html('<div>' + item.orgName + '-' + item.personName + '</div><div>' + (item.title || '无会议主题') + '</div>')
       },
 
-      fetchReserveList: function (date) {
+      fetchReserveByStoery: function (storey, date) {
         this.loadingShow = true
-        this.clearReservedFill()
-        this.clearSelectedFill()
-        this.hideSubmitBtn()
         var _this = this
-        this.$http({url: getReserveList, method: 'POST', params: {storey: 6, date: date}}).then(function (response) {
+        this.$http({url: getReserveList, method: 'POST', params: {storey: storey, date: date}}).then(function (response) {
           var list = response.data.data.items
           list.forEach(function (item, i) {
             var dates = item.dates || ''
             var ds = dates.split(',')
             ds.forEach(function (d) {
-              _this.fillReserveMeet(item, d, i % 2)
+              _this.fillReserveMeet(item, d)
             })
           })
           this.loadingShow = false
@@ -284,6 +302,22 @@
           this.toastShow = true
           this.toastTitle = '系统错误'
         })
+      },
+
+      fetchReserveList: function (date) {
+        this.clearReservedFill()
+        this.clearSelectedFill()
+        this.clearDisabledFill()
+        this.hideSubmitBtn()
+        this.fetchReserveByStoery(6, date)
+        this.fetchReserveByStoery(7, date)
+        this.fetchReserveByStoery(8, date)
+        this.fetchReserveByStoery(9, date)
+
+        var _this = this
+        setTimeout(function () {
+          _this.handleExpired(date)
+        }, 1000)
       },
 
       tabClick: function (item) {
@@ -376,7 +410,8 @@
           var id = $el.attr('id')
           if ($el.hasClass('time-item-reserved')) {
             var mobile = $el.data('mobile')
-            if (mobile) location.href = 'tel:' + mobile
+            var d = $el.hasClass('time-item-disabled')
+            if (mobile && !d) location.href = 'tel:' + mobile
           } else if ($el.hasClass('time-item-selected')) {
             var tmp1 = id.split('_')
             var date1 = tmp1[1]
@@ -388,7 +423,7 @@
             $el.removeClass('time-item-selected')
             _this.removeDates(date1)
             if (_this.selectDates.length === 0) _this.hideSubmitBtn()
-          } else {
+          } else if (!$el.hasClass('time-item-disabled')) {
             var tmp2 = id.split('_')
             var date2 = tmp2[1]
             var near = _this.isNear(date2)
@@ -452,6 +487,9 @@
   right: 7px;
 }
 
+.highlight {
+  color: #F57C00;
+}
 .title {
   font-size: 24px;
   height: 60px;
@@ -542,6 +580,14 @@
 
 .time-item-selected .item-header {
   background-color: #388E3C;
+}
+
+.time-item-disabled {
+  background-color: #C2C2C2;
+}
+
+.time-item-disabled .item-header {
+  background-color: #B5B5B5;
 }
 
 .time-item-selected {
