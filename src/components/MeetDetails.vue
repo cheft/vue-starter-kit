@@ -79,10 +79,8 @@ export default {
   },
 
   ready () {
-    console.log('111111111预订成功')
-    document.title = '预定成功'
+    config.setTitle('补充信息')
     var _this = this
-    console.log(this.$route.params.id)
     this.$refs.popup.$on('on-first-show', function () {
       _this.$refs.scroller.reset()
     })

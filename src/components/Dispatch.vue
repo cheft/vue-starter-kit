@@ -1,14 +1,14 @@
 <template>
   <div class="page-body">
-    <div class="weui_search_bar weui_search_focusing search-body" id="search_bar"> 
-      <div class="weui_search_outer"> 
-        <div class="weui_search_inner"> 
-          <i class="weui_icon_search"></i> 
-          <input type="text" class="weui_search_input" placeholder="输入关键词" v-model="value" v-on:keyup="textKeyup(value)" /> 
-          <a href="javascript:" v-if='isNull' @click="clearClick" class="weui_icon_clear" id="search_clear"></a> 
-        </div> 
-      </div> 
-      <a href="javascript:" class="weui_search_cancel" @click="okClick(value)" id="search_ok">搜索</a> 
+    <div class="weui_search_bar weui_search_focusing search-body" id="search_bar">
+      <div class="weui_search_outer">
+        <div class="weui_search_inner">
+          <i class="weui_icon_search"></i>
+          <input type="text" class="weui_search_input" placeholder="输入关键词" v-model="value" v-on:keyup="textKeyup(value)" />
+          <a href="javascript:" v-if='isNull' @click="clearClick" class="weui_icon_clear" id="search_clear"></a>
+        </div>
+      </div>
+      <a href="javascript:" class="weui_search_cancel" @click="okClick(value)" id="search_ok">搜索</a>
     </div>
     <div v-if="isLoading" class="loading-body">
       <p class="loading"><spinner type="ios-small"></spinner><span>{{ tipInfo }}</span></p>
@@ -29,7 +29,7 @@
                     <p class="info">{{ item.date }}</p>
                   </div>
                 </div>
-                <div class="arrow-body"><i class="arrow"></i></div> 
+                <div class="arrow-body"><i class="arrow"></i></div>
               </div>
             </div>
           </div>
@@ -43,7 +43,7 @@
             <span class="pullup-arrow" v-show="pullupStatus === 'down' || pullupStatus === 'up'" :class="{'rotate': pullupStatus === 'up'}">↑</span>
             <span v-show="pullupStatus === 'loading'"><spinner type="ios-small"></spinner></span>
           </div>
-        </scroller> 
+        </scroller>
       </div>
     </template>
   </div>
@@ -61,6 +61,7 @@
   let articleType = 'DISPATCH'
   export default {
     ready () {
+      Config.setTitle('发文')
       let params = {
         page: pageIndex,
         pageSize: pageCount,
@@ -234,13 +235,13 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  
+
   .info {
     font-size: 13px;
     color: #666;
     line-height: 1.5;
   }
-  
+
   .flex20 {
     -webkit-box-flex: 0 0 20px;
     -o-box-flex: 0 0 20px;
@@ -248,12 +249,12 @@
     -webkit-flex: 0 0 20px;
     flex: 0 0 20px;
   }
-  
+
   .box2-wrap {
     height: 1750px;
     overflow: hidden;
   }
-  
+
   .pullup-arrow {
     -webkit-transition: all linear 0.2s;
     -moz-transition: all linear 0.2s;
@@ -261,7 +262,7 @@
     color: #666;
     font-size: 25px;
   }
-  
+
   .rotate {
     display: inline-block;
     -webkit-transform: rotate(-180deg);

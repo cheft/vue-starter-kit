@@ -57,6 +57,7 @@
 import Blur from 'vux/components/blur'
 import Flexbox from 'vux/components/flexbox'
 import FlexboxItem from 'vux/components/flexbox-item'
+import Config from '../config'
 
 export default {
   components: {
@@ -65,9 +66,13 @@ export default {
     FlexboxItem
   },
 
+  ready () {
+    Config.setTitle('QFang 移动办公')
+  },
+
   data () {
     return {
-      url: 'static/img/cheft.png'
+      url: 'static/img/logo.png'
     }
   }
 }

@@ -148,8 +148,7 @@
     },
 
     ready () {
-      console.log('111111111预订')
-      document.title = '预订会议室'
+      config.setTitle('预定会议室')
       this.fetchMeetings()
       var _this = this
       this.$refs.meetings.$watch('current', function (val) {

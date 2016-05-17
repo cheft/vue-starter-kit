@@ -14,7 +14,7 @@
             <p class="title flex">{{ item.personName }}</p>
             <p class="title flex">{{ item.orgName + '-' + item.positionType }}</p>
           </div>
-          <div class="arrow-body"><i class="arrow"></i></div>      
+          <div class="arrow-body"><i class="arrow"></i></div>
         </div>
       </div>
     </div>
@@ -31,6 +31,7 @@
   let hisLength = 5
   export default {
     ready () {
+      Config.setTitle('通讯录')
       // window.localStorage.clear()
       let historys = window.localStorage.getItem('historys')
       if (historys !== null) {
@@ -125,7 +126,7 @@
     color: #333;
     line-height: 1.5;
   }
- 
+
   .history-body {
     padding: 0 10px;
     background: #f8f8f8;

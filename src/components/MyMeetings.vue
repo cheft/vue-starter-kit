@@ -48,6 +48,7 @@
   let phoneNumber = '13418490922'
   export default {
     ready () {
+      Config.setTitle('我的会议')
       this.$set('heg', window.outerHeight)
       // this.items = [{title: '【MOA评审】', date: '4月12日 10:00', duration: '2小时', site: '七楼一号会议室'}, {title: '【MOA】', date: '4月12日 10:00', duration: '2小时', site: '七楼一号会议室'}]
       let params = {
@@ -102,20 +103,20 @@
     font-size: 14px;
     line-height: 1.5;
   }
-  
+
   .info label {
     color: #999;
   }
-  
+
   .info span {
     color: #333;
   }
-  
+
   .info em {
     font-style: normal;
     color: #f43530;
   }
-  
+
   .btn {
     display: block;
     margin: 10px 0;
@@ -127,13 +128,13 @@
     border: 1px solid #02bb00;
     border-radius: 3px;
   }
-  
+
   .tip-info {
     padding: 0 10px;
     border-bottom: 1px solid #ececec;
     background: #fff;
   }
-  
+
   .tip-info p {
     padding: 5px 0;
     font-size: 14px;

@@ -63,6 +63,7 @@
   let meetingType = 'YES'
   export default {
     ready () {
+      Config.setTitle('我的预定')
       this.$set('heg', window.outerHeight)
       let params = {
         mobile: phoneNumber,
