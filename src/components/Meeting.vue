@@ -526,17 +526,15 @@
 .time-item {
   height: 120px;
   line-height: 120px;
-  background: #607d8b;
+  background: #fff;
   text-align: center;
-  color: #fff;
-  border: 1px solid #fff;
-  border-radius: 3px;
+  color: #A6A6A6;
+  border: 1px solid #DEDEDE;
   margin-top: 10px;
 }
 
 .item-body {
   height: 56px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
   padding: 20px 4px 4px 0;
   line-height: 24px;
   font-size: 14px;
@@ -553,21 +551,21 @@
 
 .item-header {
   height: 40px;
-  background-color: #455a64;
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
   font-size: 16px;
   font-weight: 700;
   line-height: 40px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  border-bottom: 1px solid #DEDEDE;
+  color: #2E2E2E;
 }
 
 .time-item-reserved .item-header {
-  background-color: #F57C00;
+  border-bottom: 1px solid #FFA64E;
+  color: #fff;
 }
 
 .time-item-reserved {
-  background: #FF9800;
+  background: #FF9940;
+  color: #fff;
 }
 
 .time-item-reserved.time-item-even .item-header {
@@ -579,19 +577,23 @@
 }
 
 .time-item-selected .item-header {
-  background-color: #388E3C;
-}
-
-.time-item-disabled {
-  background-color: #C2C2C2;
-}
-
-.time-item-disabled .item-header {
-  background-color: #B5B5B5;
+  color: #fff;
+  border-bottom: 1px solid #69B13D;
 }
 
 .time-item-selected {
-  background: #4CAF50;
+  color: #C6FFA1;
+  background: #56A530;
+}
+
+.time-item-disabled {
+  background-color: #E6E6E6;
+  color: #CCCCCC;
+}
+
+.time-item-disabled .item-header {
+  border-bottom: 1px solid #DCDCDC;
+  color: #CCCCCC;
 }
 
 .split-text {
@@ -659,10 +661,15 @@
   color: #DA9F5F;
 }
 
+@media (max-height: 736px) {
+  .swiper {
+    height: 500px !important;
+  }
+}
 
 @media (max-height: 667px) {
   .swiper {
-    height: 470px !important;
+    height: 480px !important;
   }
 }
 
@@ -716,8 +723,8 @@
 @media (max-height: 480px) {
   .title {
     font-size: 16px;
-    height: 20px;
-    line-height: 20px;
+    height: 16px;
+    line-height: 16px;
   }
 
   .swiper {
@@ -727,7 +734,7 @@
   .time-item {
     height: 85px;
     line-height: 85px;
-    margin -top: 5px;
+    margin-top: 5px;
   }
 
   .item-header {
