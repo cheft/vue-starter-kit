@@ -17,13 +17,13 @@
           发文</div>
         </a>
       </flexbox-item>
-      <flexbox-item><a class="item item4" v-link="{path: '/contacts'}">
+      <flexbox-item class="ui-border-r"><a class="item item4" v-link="{path: '/contacts'}">
           <div class="img yule"></div>
           <div class="text">
           通讯录</div>
         </a>
       </flexbox-item>
-      <flexbox-item class="ui-border-r"><a class="item item2" v-link="{path: '/flow'}">
+      <flexbox-item><a class="item item2" v-link="{path: '/flow'}">
           <div class="img dianying"></div>
           <div class="text">
           流程</div>
