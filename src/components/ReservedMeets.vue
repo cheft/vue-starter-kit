@@ -59,14 +59,13 @@
   import Confirm from 'vux/components/confirm/'
   let urlAddress = Config.apiPrefix + 'meeting/myMeeting'
   let outUrlAdderss = Config.apiPrefix + 'meeting/delete'
-  let phoneNumber = '13418490922'
   let meetingType = 'YES'
   export default {
     ready () {
       Config.setTitle('已预定会议室')
       this.$set('heg', window.outerHeight)
       let params = {
-        mobile: phoneNumber,
+        mobile: Config.mobile,
         type: meetingType
       }
       this.$http({

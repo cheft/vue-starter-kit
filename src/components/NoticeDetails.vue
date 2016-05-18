@@ -66,7 +66,6 @@
   import XTextarea from 'vux/components/x-textarea/'
   import XButton from 'vux/components/x-button/'
   import Toast from 'vux/components/toast/'
-  let phoneNumber = '18617166210'
   let pageIndex = 1
   let pageCount = 10
   export default {
@@ -161,7 +160,7 @@
           let params2 = {
             id: this.$route.params.id,
             content: this.textVaule,
-            mobile: phoneNumber
+            mobile: Config.mobile
           }
           this.$http({
             url: Config.apiPrefix + 'notice/commentAdd',

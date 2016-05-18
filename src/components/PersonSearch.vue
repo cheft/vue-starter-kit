@@ -5,7 +5,7 @@
         <div class="vux-search-mask" @click="touch" v-show="!isFixed"></div>
         <div class="weui_search_inner">
           <i class="weui_icon_search"></i>
-          <input type="text" class="weui_search_input" id="search_input" placeholder="{{placeholder}}" autocomplete="off" required v-model="value" v-el:input />
+          <input type="search" class="weui_search_input" id="search_input" placeholder="{{placeholder}}" autocomplete="off" required v-model="value" v-el:input v-on:change="changeVal" />
           <a href="javascript:" class="weui_icon_clear" id="search_clear" @click="clear"></a>
         </div>
         <label for="search_input" class="weui_search_text" id="search_text">
@@ -15,12 +15,13 @@
       </form>
       <a href="javascript:" class="weui_search_cancel" id="search_cancel" @click="cancel">{{cancelText}}</a>
     </div>
-    <div class="weui_cells search_show" v-show="isFixed && results.length && value">
+    <div class="weui_cells search_show" v-show="isFixed && results.length">
       <div v-if="isLoading" class="loading-body">
         <p class="loading"><spinner type="ios-small"></spinner><span>{{ tipInfo }}</span></p>
       </div>
       <scroller v-ref:scroller lock-x scrollbar-y :height="listHeight + 'px'">
         <div class="box2">
+          <div class="search-tip">{{searchTip}}</div>
           <div v-else v-for="item in results">
             <cell :title="item.orgName + '-' + item.personName">
               <div slot="value">
@@ -71,6 +72,9 @@
       isLoading: {
         type: Boolean,
         default: false
+      },
+      searchTip: {
+        type: String
       }
     },
     components: {
@@ -81,6 +85,7 @@
       XButton,
       Scroller
     },
+
     methods: {
       clear: function () {
         this.value = ''
@@ -97,6 +102,7 @@
         if (this.autoFixed) {
           this.isFixed = true
         }
+        this.$dispatch('show')
       },
       setFocus: function () {
         this.$els.input.focus()
@@ -107,6 +113,9 @@
           this.$dispatch('item-add-click', item)
         }
         $(e.target).removeClass('weui_btn_primary').addClass('weui_btn_default').text('已增加')
+      },
+      changeVal: function (e) {
+        this.$dispatch('on-change', this.value)
       }
     },
     /* eslint-disable no-undef */
@@ -129,7 +138,8 @@
         }
       },
       value: function (val) {
-        this.$dispatch('on-change', this.value)
+        // this.$dispatch('on-change', this.value)
+        this.results = []
       },
       results: function () {
         var _this = this
@@ -169,5 +179,12 @@
   .weui_btn {
     font-size: 14px;
     border-radius: 0;
+  }
+
+  .search-tip {
+    text-align: center;
+    font-size: 14px;
+    color: #888888;
+    padding-top: 5px;
   }
 </style>

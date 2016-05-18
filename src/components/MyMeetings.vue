@@ -45,14 +45,13 @@
   import Spinner from 'vux/components/spinner/'
   import Icon from 'vux/components/icon/'
   let urlAddress = Config.apiPrefix + 'meeting/myMeeting'
-  let phoneNumber = '13418490922'
   export default {
     ready () {
       Config.setTitle('我的待开会议')
       this.$set('heg', window.outerHeight)
       // this.items = [{title: '【MOA评审】', date: '4月12日 10:00', duration: '2小时', site: '七楼一号会议室'}, {title: '【MOA】', date: '4月12日 10:00', duration: '2小时', site: '七楼一号会议室'}]
       let params = {
-        mobile: phoneNumber
+        mobile: Config.mobile
       }
       this.$http({
         url: urlAddress,

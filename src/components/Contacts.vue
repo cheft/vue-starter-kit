@@ -27,7 +27,6 @@
   import Spinner from 'vux/components/spinner/'
   import Icon from 'vux/components/icon/'
   let urlAddress = Config.apiPrefix + 'contactsList'
-  let phoneNumber = '18617166210'
   let hisLength = 5
   export default {
     ready () {
@@ -69,7 +68,7 @@
   function searchInfo (_this, _val) {
     let params = {
       keyword: _val,
-      mobile: phoneNumber
+      mobile: Config.mobile
     }
     _this.$http({
       url: urlAddress,

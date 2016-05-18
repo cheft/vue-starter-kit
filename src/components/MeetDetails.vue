@@ -21,9 +21,9 @@
       </div> -->
     </div>
     <popup v-ref:popup :show.sync="popupShow" height="100%">
-      <search @item-add-click="itemAddClick" @on-change="getResult" :results="results" :value.sync="value" class="search-body" placeholder="根据部门或者姓名搜索" cancel-text="关闭"></search>
+      <search v-ref:search @item-add-click="itemAddClick" @on-change="getResult" :results="results" :value.sync="value" class="search-body" placeholder="根据姓名或部门搜索" cancel-text="关闭" :search-tip="searchTip"></search>
       <scroller v-ref:scroller lock-x scrollbar-y :height="listHeight + 'px'">
-        <group class="list-body" :title="'你当前已选择 '  + personLen + ' 人'">
+        <group class="list-body" :title="'您当前已选择 '  + personLen + ' 人'">
           <cell :title="p.orgName + '-' + p.personName" v-for="p in selectedPersons">
             <div slot="value">
               <x-button type="warn" :id="p.id" @click="delPerson($index)">删除</x-button>
@@ -68,6 +68,33 @@ var updateUrl = config.apiPrefix + 'meeting/update'
 var fetchUrl = config.apiPrefix + 'meeting/select'
 var contactsUrl = config.apiPrefix + 'contactsList/listByKeyword'
 
+function setHistorys (item) {
+  if (item) {
+    let historys = window.localStorage.getItem('attendee')
+    let arr = []
+    if (historys !== null) {
+      arr = JSON.parse(historys)
+    }
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].id === item.id) {
+        arr.splice(i, 1)
+        break
+      }
+    }
+    if (arr.length === 10) {
+      arr.pop()
+    }
+    arr.unshift({
+      id: item.id,
+      orgName: item.orgName,
+      positionType: item.positionType,
+      personName: item.personName
+    })
+    historys = JSON.stringify(arr)
+    window.localStorage.setItem('attendee', historys)
+  }
+}
+
 export default {
   components: {
     Group,
@@ -87,12 +114,13 @@ export default {
   ready () {
     config.setTitle('补充信息')
     var _this = this
-    this.$refs.popup.$watch('show', function () {
-      _this.$refs.scroller.reset()
+
+    this.$refs.search.$on('show', function () {
+      let historys = window.localStorage.getItem('attendee')
+      if (!historys) return
+      _this.results = JSON.parse(historys)
+      _this.searchTip = '最近选择的 ' + _this.results.length + ' 人'
     })
-    // this.$refs.confirm.$on('on-confirm', function () {
-    //   _this.submitHandle()
-    // })
 
     this.fetchMeet()
   },
@@ -112,7 +140,8 @@ export default {
       toastShow: false,
       confirmTitle: '',
       confirmShow: false,
-      meetInfo: ''
+      meetInfo: '',
+      searchTip: ''
     }
   },
 
@@ -127,11 +156,24 @@ export default {
 
     confirmSelected: function () {
       this.popupShow = false
+      this.selectedPersons.forEach(function (item) {
+        setHistorys(item)
+      })
     },
 
     itemAddClick: function (item) {
-      this.selectedPersons.push(item)
+      this.addPerson(item)
       this.personLen = this.selectedPersons.length
+      this.$refs.scroller.reset()
+    },
+
+    addPerson: function (item) {
+      for (var i = 0; i < this.selectedPersons.length; i++) {
+        if (this.selectedPersons[i].id === item.id) {
+          return
+        }
+      }
+      this.selectedPersons.push(item)
     },
 
     delPerson: function (index) {
@@ -140,6 +182,7 @@ export default {
     },
 
     getResult: function () {
+      this.loadingShow = true
       var _this = this
       if (!this.value) return
       var params = {
@@ -150,13 +193,16 @@ export default {
       .then(function (response) {
         if (response.data.code === 1000) {
           _this.results = response.data.data.items
+          _this.searchTip = '共搜索 ' + _this.results.length + ' 人'
         } else {
           _this.toastShow = true
           _this.toastTitle = '系统错误'
         }
+        _this.loadingShow = false
       }, function (response) {
         _this.toastShow = true
         _this.toastTitle = '系统错误'
+        _this.loadingShow = false
       })
     },
 
@@ -259,6 +305,10 @@ export default {
 
   .footer-btns .weui_btn {
     margin: 20px 10px 20px 10px;
+  }
+
+  .weui_loading_toast {
+    z-index: 9999;
   }
 
   @media (max-width: 320px) {

@@ -58,7 +58,6 @@
   let urlAddress = Config.apiPrefix + 'notice/list'
   let pageIndex = 1
   let pageCount = 10
-  let phoneNumber = '18617166210'
   let articleType = 'NOTICE'
   export default {
     ready () {
@@ -66,7 +65,7 @@
       let params = {
         page: pageIndex,
         pageSize: pageCount,
-        mobile: phoneNumber,
+        mobile: Config.mobile,
         type: articleType
       }
       if (pageIndex !== 1) {
@@ -118,7 +117,7 @@
         let params = {
           page: pageIndex,
           pageSize: pageCount,
-          mobile: phoneNumber,
+          mobile: Config.mobile,
           type: articleType,
           keyword: val.replace(/(^\s*)|(\s*$)/g, '')
         }
@@ -148,7 +147,7 @@
         let params = {
           page: 1,
           pageSize: pageIndex * pageCount,
-          mobile: phoneNumber,
+          mobile: Config.mobile,
           type: articleType,
           keyword: this.value
         }
@@ -176,7 +175,7 @@
         let params = {
           page: pageIndex,
           pageSize: pageCount,
-          mobile: phoneNumber,
+          mobile: Config.mobile,
           type: articleType,
           keyword: this.value
         }
