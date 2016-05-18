@@ -284,10 +284,10 @@
         $el.find('.item-body').html('<div>' + item.orgName + '-' + item.personName + '</div><div>' + (item.title || '无会议主题') + '</div>')
       },
 
-      fetchReserveByStoery: function (storey, date) {
+      fetchReserveAll: function (date) {
         this.loadingShow = true
         var _this = this
-        this.$http({url: getReserveList, method: 'POST', params: {storey: storey, date: date}}).then(function (response) {
+        this.$http({url: getReserveList, method: 'POST', params: {date: date}}).then(function (response) {
           var list = response.data.data.items
           list.forEach(function (item, i) {
             var dates = item.dates || ''
@@ -297,10 +297,12 @@
             })
           })
           this.loadingShow = false
+          _this.handleExpired(date)
         }, function (response) {
           this.loadingShow = false
           this.toastShow = true
           this.toastTitle = '系统错误'
+          _this.handleExpired(date)
         })
       },
 
@@ -309,15 +311,7 @@
         this.clearSelectedFill()
         this.clearDisabledFill()
         this.hideSubmitBtn()
-        this.fetchReserveByStoery(6, date)
-        this.fetchReserveByStoery(7, date)
-        this.fetchReserveByStoery(8, date)
-        this.fetchReserveByStoery(9, date)
-
-        var _this = this
-        setTimeout(function () {
-          _this.handleExpired(date)
-        }, 1000)
+        this.fetchReserveAll(date)
       },
 
       tabClick: function (item) {
